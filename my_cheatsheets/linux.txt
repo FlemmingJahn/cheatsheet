@@ -1,20 +1,13 @@
-linux
-=====
-============================================================ ============================================================
-          SSH                                                                  File handling
-============================================================ ============================================================
-ssh with DISPLAY variable : ssh -Y fj@soft05                 Mounting to another PC - sshfs soft01:prj/ prj
-
-#Remembering ssh login password for soft09 server
-ssh-copy-id jenkins@soft-test09 ;
-
-============================================================ ============================================================
-          Console setup                                                        Commands
-============================================================ ============================================================
-Change bagground color -                                      !* - Tell linux to use the arguments from the previous command
+H::SSH
+ssh with DISPLAY variableC::ssh -Y fj@soft05
+H::File handling
+Mounting to another PC - sshfs soft01:prj/ prj
+Remembering ssh login password for soft09 serverC::ssh-copy-id jenkins@soft-test09
+Console setup
+Change bagground color -
        1) edit .Xdefaults
        2) xrdb ~/.Xdefaults
        3) restart terminal
-
-Change ls colors
-     cp /ect/DIR_COLORS to ~/.dir_colors
+Change ls colorsC::cp /ect/DIR_COLORS  ~/.dir_colors
+H::Commands
+!* - Tell linux to use the arguments from the previous command
