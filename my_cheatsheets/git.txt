@@ -1,0 +1,13 @@
+H::Clone
+git clone ssh://soft02.dk.vitesse.com/proj/sw/git/webstax2  branch-estax-rel-3_60_mass
+vtss-webstax-clone
+vtss-webstax-clone clean2
+git clone ssh://soft02.dk.vitesse.com/proj/sw/git/vtss-buildroot.git
+Revert chnges for a file C::git checkout -- <file>
+H::Show
+git show-ref ESTAX-REL-3.60_GIT_TEST_1
+git show-ref ESTAX-REL-3.60_GIT_TEST_1
+git show 1e66c489782a10ec778dbcd790b0487949fab8aa
+H::Cleanup
+git clean -df; # Removing all files not checked in
+git clean -df; git checkout -- . # Get back to clean repository
