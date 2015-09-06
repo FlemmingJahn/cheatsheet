@@ -1,0 +1,19 @@
+H::Default
+The text between <html> and </html> describes an HTML document
+The text between <head> and </head> provides information about the document
+The text between <title> and </title> provides a title for the document
+The text between <body> and </body> describes the visible page content
+The text between <h1> and </h1> describes a heading
+The text between <p> and </p> describes a paragraph
+H::tags
+HeaderC::<h1></h1>
+Paragraph - spaces and new lines are ignored:C::<p></p>
+BoldC::<b></b>
+ItalicC::<i></i>
+EmphasizedC::<em></em>.
+H::styles
+Default styleC::<body style=background-color:lightgrey>
+ColorC::<h1 style=color:blue></h1>
+fontC::<h1 style=font-family:verdana></h1>
+Text SizeC::<h1 style=font-size:300%></h1>
+Text AlignmentC::<h1 style=text-align:center></h1>
