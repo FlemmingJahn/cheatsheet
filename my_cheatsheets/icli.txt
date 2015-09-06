@@ -1,0 +1,15 @@
+    KTN docs:
+
+    Engine: DS1061
+    Engine: AN1045, programming guide
+    Engine: AN1047, command generation
+    Engine: RS1035
+
+    Product specs: *Zyxel* -- mentions Phase 2 in passing, not really any requirements beyond that
+
+    ZyXEL cmd list: MES-3728 CLI reference guide.pdf
+
+    Change VTSS => ICLI: debug cons ac 1
+
+    Allow debug commands: _debug_privilege_, use ICLI_PRIVILEGE_DEBUG in .icli file
+

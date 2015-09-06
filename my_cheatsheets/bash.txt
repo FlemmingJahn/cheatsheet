@@ -1,0 +1,4 @@
+H::Commands
+C::ls -la
+H::Programmeing
+C::for i in 1 {5..10}; do echo $i; done

@@ -30,24 +30,32 @@ class Line
     @cpIndex = $copyLines.length
   end
 
-  def print
+  def dump
     if @copy
       printf("%-3d", @cpIndex)
     else
       printf "   "
     end
-
-    printf " #{@text}" if @text
-    printf " :\e[36m #{@copy}\e[0m" if @copy
+    output = ""
+    output += " #{@text}" if @text
+    output += " :" if @text && @text != "" && @copy
+    output += "\e[36m #{@copy}\e[0m" if @copy
+    puts   "#{output}"
   end
 end
 
 class Block
   attr_accessor :header
+  attr_accessor :lenMax
 
   def initialize name
     @header = name
     @lines = []
+    @lenMax = 5
+  end
+
+  def lineCnt
+    return @lines.length
   end
 
   def addLine newLine
@@ -55,18 +63,10 @@ class Block
     l.text, copyText = newLine.split("C::")
     l.addCopyText copyText if copyText
     @lines.push(l)
-  end
-
-  def lenMax
-    maxLen = 0
-    @lines.each do |l|
-      lineLen = 0
-      lineLen += l.text.length if l.text
-      lineLen += l.copy.length if l.copy
-
-      maxLen = lineLen if lineLen > maxLen
-    end
-    return maxLen + 5
+    len = 5
+    len += l.text.length if l.text
+    len += l.copy.length if l.copy
+    @lenMax = len if @lenMax < len
   end
 
   def write file
@@ -78,19 +78,19 @@ class Block
     end
   end
 
-  def print hdrNo
-    puts ""
-    puts "=" * lenMax
-    len = ((lenMax - @header.length) / 2)
-    len = 0 if len < 0 # Make sure that we don't "overrun"
-    printf " " * len
-    puts "#{hdrNo} #{@header}"
-    puts "=" * lenMax
-
-    i = 0
-    @lines.each do |l|
-      l.print
+  def dump hdrNo, lineNo
+    if lineNo == 0
+      hdr = " H:#{hdrNo} #{@header} "
+      len = ((@lenMax - (hdr.length)) / 2) + 1
+      len = 1 if len < 1 # Make sure that we don't "overrun"
+      printf "\n"
+      printf "=" * len
+      printf hdr
+      printf "=" * len
+      printf "\n"
+      return
     end
+    @lines[lineNo-1].dump
   end
 end
 
@@ -101,7 +101,7 @@ class Cheatsheet
   end
 
   def insertLine block, line
-    if /^H::/.match(line)
+   if /^H::/.match(line)
       block.header = line.gsub(/^H::/,"")
     else
       block.addLine line
@@ -131,13 +131,17 @@ class Cheatsheet
     @blocks.push(b)
   end
 
-  def append line
+  def insert line, hdrNo
     if /^H::/.match(line)
       b = Block.new(line)
-      @blocks.push(b)
+      if hdrNo
+        @blocks.insert(hdrNo + 1, b)
+      else
+        @blocks.push(b)
+      end
     end
-
-    insertLine @blocks[-1], line
+    hdrNo = -1 if hdrNo.nil?
+    insertLine @blocks[hdrNo], line
   end
 
   def write f
@@ -148,22 +152,28 @@ class Cheatsheet
     }
   end
 
-  def print
+  def dump
     col, row = IO.console.winsize
     size = col
-    i = 0
     hdrArrLen = 0
-    @blocks.each do |h|
-    #  hArr.push(h)
 
+    @blocks.each do |h|
       if (h.lenMax + hdrArrLen) > col
         break
       end
     end
 
-    @blocks.each do |h|
-      h.print i
-      i += 1
+    dumpLines 0, @blocks.length-1
+  end
+
+  private
+
+  def dumpLines blkStart, blkEnd
+    for blkNo in blkStart..blkEnd
+      h = @blocks[blkNo]
+      for i in 0..h.lineCnt
+        h.dump blkNo, i
+      end
     end
   end
 end
@@ -217,7 +227,6 @@ def checkOptions options
     end
 
     opts.on("-C", "--COPYTEXT <string>", "Insert new \"coopy\" text.") do |h|
-      binding.pry
       options[:copytext] = "C::#{h}"
     end
 
@@ -234,6 +243,13 @@ cheat = Cheatsheet.new
 
 cheatSheetName = checkOptions options
 
+# I do not support integer cheatsheet names, because that can be intepreted as header number.
+nameIsInt = Integer(cheatSheetName) rescue nil
+if nameIsInt
+  puts "Error: Cheatsheet name can't not be an integer"
+  exit
+end
+
 PATH = File.dirname($0) + "/my_cheatsheets" # Get the path to the cheatsheets
 
 file = (getFile cheatSheetName)
@@ -245,9 +261,9 @@ arg1 = checkOptions options
 argIsInt = Integer(arg1) rescue nil
 if argIsInt
   hdrNo = arg1.to_i
-  remSting = checkOptions options
+  plainTxt = checkOptions options
 else
-  remString = arg1
+  plainTxt = arg1
 end
 
 # Check that we have reach the last argument
@@ -257,23 +273,25 @@ if  anyMoreArg
   exit
 end
 
-if remString.nil? && hdrNo
+if options[:header]
+  cheat.insert options[:header], hdrNo
+  writeFile = true
+end
+
+if options[:copytext]
+  plainTxt  = "" if plainTxt.nil?
+  plainTxt += options[:copytext]
+end
+
+if plainTxt.nil? && hdrNo
+  puts "Error: No copytext found for number:#{hdrNo}" if  $copyLines.length < hdrNo
   Clipboard.copy $copyLines[hdrNo -1]
   exit
 end
 
 
-if options[:header]
-  cheat.append options[:header]
-  writeFile = true
-end
-
-if remString && options[:copytext]
-  remString = remString + options[:copytext]
-end
-
-if remString && hdrNo.nil? || options[:copytext]
-  cheat.append remString
+if plainTxt
+  cheat.insert plainTxt, hdrNo
   writeFile = true
 end
 
@@ -282,4 +300,4 @@ if writeFile
   exit
 end
 
-cheat.print
+cheat.dump

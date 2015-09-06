@@ -1,0 +1,5 @@
+netbeans
+========
+
+    MIME types: .netbeans/_ver_/config/Services/MIMEResolver/user-defined-mime-resolver.xml
+

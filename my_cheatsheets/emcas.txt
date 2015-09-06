@@ -1,0 +1,8 @@
+emcas
+=====
+
+    hg annotate - <alt-x> vc-annotate
+
+
+H::Code
+Turn on coloring and syntax _ use M-x font-lock-mode RET.

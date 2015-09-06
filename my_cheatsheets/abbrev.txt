@@ -1,0 +1,244 @@
+    802.1ag - CFG without performance monitoring
+
+    802.1ag - CFM uden perf.mon.
+
+    802.3ah - Link OAM
+
+    AC - Attachment Circuit
+
+    ACH - Associated Channel Header
+
+    ACh - Associated Channel
+
+    APS - Automatic Protection Switching
+
+    ASP - Vitesse Arrival Service Point (see SP)
+
+    BPDU - Bridge PDU
+
+    CCAMP - Common Control And Measurement Plane
+
+    C-tag - VLAN Q-in-Q inner (Customer) tag
+
+    CIR - Committed Information Rate
+
+    CBS - Committed Burst Size (leaky bucket)
+
+    CW - Control Word (MPLS-TP PWs)
+
+    DCC - Data Communications Channel (SDH/SONET)
+
+    DEI - VLAN Drop Eligible Indicator (leaky bucket)
+
+    DLB - Dual Leaky Bucket
+
+    DM - Delay Measurement
+
+    Down-MEP - monitors fwd path external to a node (implemented on egress port)
+
+    DP - Drop Precedence
+
+    DSCP - DiffServ Code Point
+
+    DSP - Vitesse Departure Service Point (see SP).
+
+    ECE - EVC Control Entry (in VTSS SW API)
+
+    ECMP - Equal Cost MultiPath routing
+
+    EIR - Excess Information Rate (leaky bucket)
+
+    EIS - Excess Information Size (leaky bucket)
+
+    E-LMI - Eth Local Mgmt Ifc (def'd in MEF 16). DMAC 01:80:c2:00:00:07, ethtype 0x88EE
+
+    E-LMI - MEF Ethernet Local Management Interface
+
+    E-LSP - Explicitly TC-encoded-PSC LSP (was: EXP-inferred-PSC LSP); CoS determined by TC bits. See L-LSP
+
+    E-NNI - External NNI
+
+    EPL, EVPL - MEF Ethernet Private Line, Ethernet Virtual Private Line service.
+
+    EP-LAN, EVP-LAN - MEF Ethernet Private LAN, Ethernet Virtual Private LAN service
+
+    EP-TREE, EVP-TREE MEF Ethernet Private TREE, Ethernet Virtual Private TREE service
+
+    ESDX - Service (Egress) inDeX. See ISDX
+
+    ETH-APS - Eth Automatic Protection Switching
+
+    ETH-CC - Eth Continuity Check: Y.1731
+
+    ETH-LB - Eth LoopBack: Y.1731
+
+    ETH-LT - Eth LinkTrace: Y.1731
+
+    ETH-MCC - Eth Maintenance Communication Channel: Y.1731
+
+    EVC - Eth Virtual Circuit
+
+    EVC - MEF Ethernet Virtual Connection
+
+    EXP - EXPerimental bits in MPLS header; now renamed to TC, Traffic Class (RFC 5462)
+
+    FEC - Forwarding Equivalency Class
+
+    FIB - Forwarding Information Base
+
+    GAL - Generic Associated Channel Label
+
+    GE ACH - GEneric Associated Channel Header
+
+    G-ACh - Generic Associated Channel
+
+    H-VPLS - Hierarchical VPLS
+
+    I-NNI - Internal NNI
+
+    ISDX - Service (Ingress) inDeX. See ESDX
+
+    LB - Loop Back
+
+    LDP - Label Distribution Protocol
+
+    LER - Label Edge Router
+
+    LLC - Logical Link Control
+
+    L-LSP - Label-only Inferred PSC LSP
+
+    LM - Loss Measurement
+
+    LSP - Label Switched Path
+
+    LSR - Label Switch(ing) Router
+
+    MCC - Management Comms Channel (SDH/SONET)
+
+    ME - Maintenance Entity
+
+    MEF - Metro Ethernet Forum
+
+    MEG - Maintenance Entity Group
+
+    MEL - MEG Level
+
+    MEP - MEG End Point
+
+    MIP - MEG Intermediate Point
+
+    MLL - MPLS Link Layer (usually on Ethernet)
+
+    MP2MP - MultiPoint 2 MultiPoint: multiple ingress routers => LSP => multiple egress routers
+
+    MPLS - Multi Protocol Label Switching
+
+    MPLS-TE - MPLS Traffic Engineering
+
+    MPLS-TP - MPLS Transport Profile
+
+    MS-PW - Multi Segment PW
+
+    MTU - Multi Tenant Unit (VPLS)
+
+    MTU-s - Multi Tenant Unit-switch
+
+    NNI - Network-to-Network Ifc
+
+    P - Provider router (MPLS)
+
+    PAG - Policy association group; used to map many services to a shared security Policy
+
+    PB - IEEE 802.1AD Provider Bridging (also known as Q-in-Q)
+
+    PCP - VLAN Priority Code Point
+
+    PE - Provider Edge router (MPLS)
+
+    PE-rs - (VPLS)
+
+    PHB - Per Hop Behavior
+
+    PSC - PHB Scheduling Class
+
+    PTP - Precision Time Protocol, IEEE 1588; Ethtype 0x88f7, UDP port 319+320
+
+    PW - Pseudo Wire, both MEF and MPLS-TP
+
+    Q-in-Q - Double VLAN tagging
+
+    SAP - Service Access Points (in LLC header)
+
+    SNAP - SubNetwork Access Protocol
+
+    SCC - Signaling Comms Channel (SDH/SONET)
+
+    SP - Vitesse Service Point: A reference point inside the CE Switch where service policy is applied; service policy includes policing, statistics, tagging/encapsulation, QoS, and connectivity
+
+    S-PE - PW Switching PW (for multi-segment MPLS-TP PWs), see T-PE
+
+    SS-PW - Single Segment PW, see MS-PW
+
+    S-tag - VLAN Q-in-Q outer (Service) tag
+
+    TAL - MPLS-TP Alert Label
+
+    TC - Traffic Control
+
+    TCAM - Ternary Content-Addressable Memory (0, 1, don't care matching per bit)
+
+    TCM - Tandem Connection Monitoring (across multiple administrative domains)
+
+    TE - Traffic Engineering
+
+    T-LDP - Targeted LDP
+
+    TLV - Type Length Value
+
+    T-PE - PW Terminating PE (for MPLS-TP PWs), see S-PE
+
+    TTL - Time To Live
+
+    UNI - User Network Ifc
+
+    UNI-C - UNI, Customer side
+
+    UNI-N - UNI, Network side
+
+    Up-MEP - monitors fwd path internal to a node (implemented on ingress port)
+
+    VCAP - Vitesse Content Aware Processor (calc key, lookup in TCAM)
+
+    VCAP - Vitesse Content Aware Processor, TCAM-based classification and security
+
+    VCCV - Virtual Circuit Connectivity Verification (PWE3)
+
+    VOE - Vitesse OAM Endpoints
+
+    VOP - Vitesse OAM Processor
+
+    VPLS - Virtual Private LAN Service (MPLS)
+
+    VSI - Virtual Switch Instance (VPLS)
+
+    Y.1564 - Service activation / test
+
+    Y.1588 - Time sync
+
+    Y.1731 - CFM med perf.mon.
+
+    RS1003 - Software Flow / OAM req. spec
+
+    DS1026 - MPLS (Carneiro / Joergen)
+
+    BFD - Bidirectional Forwarding Detection
+
+    MVRP - Multicast VLAN Registration Protocol; replaced GVRP
+
+    GVRP - GARP VLAN Registration Protocol; replaced by MMRP
+
+    MMRP - Multiple MAC Registration Protocol
+
+    GMRP - GARP Multicast Registration Protocol
+

@@ -1,0 +1,7 @@
+buildroot
+=========
+
+    make list-defconfigs
+
+    make menuconfig
+

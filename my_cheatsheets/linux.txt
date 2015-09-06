@@ -1,0 +1,20 @@
+linux
+=====
+============================================================ ============================================================
+          SSH                                                                  File handling
+============================================================ ============================================================
+ssh with DISPLAY variable : ssh -Y fj@soft05                 Mounting to another PC - sshfs soft01:prj/ prj
+
+#Remembering ssh login password for soft09 server
+ssh-copy-id jenkins@soft-test09 ;
+
+============================================================ ============================================================
+          Console setup                                                        Commands
+============================================================ ============================================================
+Change bagground color -                                      !* - Tell linux to use the arguments from the previous command
+       1) edit .Xdefaults
+       2) xrdb ~/.Xdefaults
+       3) restart terminal
+
+Change ls colors
+     cp /ect/DIR_COLORS to ~/.dir_colors

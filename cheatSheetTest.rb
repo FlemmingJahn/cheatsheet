@@ -2,36 +2,57 @@
 #
 # Testcase for testing cheatsheet script
 #
-
 require 'pry'      # For debugging
+
+testCheat = "newCheatsheet"
+$testFile  = File.dirname($0) + "/my_cheatsheets/" + testCheat + ".txt"  # Get the path to the cheatsheets
+
+system("rm -f #{$testFile}")
 
 def systemTest cmd, expectedResult
   puts cmd
   result = `#{cmd}`
-  puts "Error: result:#{result}, expected result:#{expectedResult}" if result.match(expectedResult).nil?
+
+  if result.match(expectedResult).nil?
+    puts "Error: result:#{result}, expected result:#{expectedResult}"
+    exit
+  end
 end
 
+def checkIfCreated
+  puts "Error: New cheatSheet not created - #{$testFile}" if !File.exist?($testFile)
+end
 
-
-systemTest("c newFile", "New cheatSheet named newFile created") # Testing creating new cheatsheet
-puts "Error: New cheatSheet not created" if !File.exist?('newFile.txt')
-system("rm newFile.txt")
-
+systemTest("c #{testCheat}", "New cheatSheet named #{testCheat} created") # Testing creating new cheatsheet
+checkIfCreated
 
 
 # Create and insert cheat text
-systemTest("c newFile \"Ordinary Text\"", "")  # Create new cheatSheet
-puts "Error: New cheatSheet not created" if !File.exist?('newFile.txt')
-systemTest("c newFile", "Ordinary Text")  # Check that we can read out the text
+systemTest("c #{testCheat} \"Ordinary Text\"", "")  # Create new cheatSheet
+puts "Error: New cheatSheet not created" if !File.exist?($testFile)
+checkIfCreated
+
 
 # Insert Header
-systemTest("c newFile -H \"New Header\"", "")  #
-systemTest("c newFile", "1 New Header")  # Check that we can read out the header
+systemTest("c #{testCheat} -H \"New Header\"", "")  #
+systemTest("c #{testCheat}", "1 New Header")  # Check that we can read out the header
+
+
+# Insert Copy
+systemTest("c #{testCheat} -C \"New copy text\"", "")  #
+systemTest("c #{testCheat}", "New copy text")  # Check that we can read out
 
 
 # Test too many arguments"
-systemTest("c newFile \"Ordinary Text\" \"copy text\"", "Unexpected input : copy text")
+systemTest("c #{testCheat} \"Ordinary Text\" \"copy text\"", "Unexpected input : copy text")
+
+# Test cheatsheet is number, which is not allowed
+systemTest("c 1", "Error: Cheatsheet name can't not be an integer")
+
+# Test trying to get a non-existing copy text
+systemTest("c #{testCheat} 100", "Error: No copytext found for number:100")
+
 #
 # Cleanup
 #
-system("rm newFile.txt")
+system("rm -f #{$testFile}")

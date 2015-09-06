@@ -1,0 +1,37 @@
+gdb
+===
+
+    TUI window mode: ^A x
+
+    Watch memory write: watch *address
+
+    Watch memory read: rwatch
+
+    Watch access: awatch
+
+    ICE: target remote ip:2345
+
+    Stack overflow chasing: frame _x_ to get to thread invocation, p *thread, look for thread limit. Then watch that address, continue.
+
+    ~/tools/install/bin/mipsisa32-elf-gdb ~/sw/webstax2/build/obj/SMBStaX.elf
+
+    target remote 10.10.130.62:2345
+
+    http://twiki.dk.vitesse.com/twiki/cgi-bin/view/Software/UsingMAJICJtag
+
+    .gdbinit -- macros from Allan
+
+    Remember to fix up sw/majic/vcoreiii file from C: after ICE IP changes
+
+    ICE breakpoint from GDB: mon hbr w 0x1234
+
+    Enum: decimal => symbol: print (vtss_icfg_ordering_t)47
+
+    set sysroot /opt/vtss/vtss-brsdk-v00.21/sysroots/mips32el-nf-linux 
+
+    gdbserver --attach 0.0.0.0:1234 1
+
+    mipsel-linux-gdb obj/*.elf
+
+    mipsel-linux-gdb obj/*.elf
+
