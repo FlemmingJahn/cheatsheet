@@ -1,13 +1,5 @@
-ruby
-====
-
-    irl
-
-    ../../../vtss_test/automatic/vtss_sw_test.rb --base ../../.. --only test1.rb --nodutinit --mibdir ../../snmp/mibs
-
-    ../../../vtss_test/automatic/vtss_sw_test.rb --base ../../.. --only test1.rb --nodutinit --mibdir ../../snmp/mibs
-
-    For getting next, step in pry - gem install nav
-
-    For getting next, step in pry - gem install pry-nav
-
+H::Install
+H::Debugging
+C::irl
+For getting next, step in pryC::gem install nav
+For getting next, step in pryC::gem install pry-nav

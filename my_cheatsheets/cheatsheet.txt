@@ -1,0 +1,3 @@
+H::Default
+H::Install
+xclip needed for copy textC::sudo apt-get install xclip

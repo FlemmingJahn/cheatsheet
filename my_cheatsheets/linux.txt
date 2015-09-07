@@ -11,3 +11,8 @@ Change bagground color -
 Change ls colorsC::cp /ect/DIR_COLORS  ~/.dir_colors
 H::Commands
 !* - Tell linux to use the arguments from the previous command
+H::Sw Installation
+H::Security
+List usersC::cut -d: -f1 /etc/passwd
+Give existing user sudo rightsC::sudo usermod -a -G sudo <user>
+Add new userC::sudo adduser <user>

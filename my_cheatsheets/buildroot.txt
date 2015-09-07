@@ -1,7 +1,7 @@
-buildroot
-=========
-
-    make list-defconfigs
-
-    make menuconfig
-
+H::MAke
+C::make list-defconfigs
+C::make menuconfig
+H::MSCC Redboot
+CheckoutC::make mscc-redboot
+Build ServalC::make mscc-redboot-serval
+export PATH=$PATH:/opt/vtss-cross-ecos-mips32-24kec-v2/bin
