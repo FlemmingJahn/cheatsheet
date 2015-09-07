@@ -276,20 +276,26 @@ cheat = Cheatsheet.new
 
 cheatSheetName = checkOptions options
 
-# I do not support integer cheatsheet names, because that can be intepreted as header number.
-nameIsInt = Integer(cheatSheetName) rescue nil
-if nameIsInt
-  puts "Error: Cheatsheet name can't not be an integer"
-  exit
-end
 
 PATH = File.dirname($0) + "/my_cheatsheets" # Get the path to the cheatsheets
 
+# If the first argument is a number then we copy the corrsponding copyText from the last sheet that was read
+nameIsInt = Integer(cheatSheetName) rescue nil
+if nameIsInt
+  if !File.exist?("#{PATH}/cheatsheet.last")
+    puts "No cheatsheeet has been read yet - Can't do copytext until a sheet has been read."
+    exit
+  end
+  cheatSheetName = IO.read("#{PATH}/cheatsheet.last") #
+  arg1 = nameIsInt
+else
+  arg1 = checkOptions options
+end
+
 file = (getFile cheatSheetName)
 file = "#{PATH}/#{file}"
+IO.write("#{PATH}/cheatsheet.last", cheatSheetName) # Store that this is the latest cheatsheet that has been read.
 cheat.parse file
-
-arg1 = checkOptions options
 
 argIsInt = Integer(arg1) rescue nil
 if argIsInt

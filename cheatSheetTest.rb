@@ -46,9 +46,6 @@ systemTest("c #{testCheat}", "New copy text")  # Check that we can read out
 # Test too many arguments"
 systemTest("c #{testCheat} \"Ordinary Text\" \"copy text\"", "Unexpected input : copy text")
 
-# Test cheatsheet is number, which is not allowed
-systemTest("c 1", "Error: Cheatsheet name can't not be an integer")
-
 # Test trying to get a non-existing copy text
 systemTest("c #{testCheat} 100", "Error: No copytext found for number:100")
 
