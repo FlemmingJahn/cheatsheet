@@ -5,7 +5,7 @@ Defines an HTML documentC::<html></html>
 Defines a title for the documentC::<title></title>
 Defines the document's bodyC::<body></body>
 Defines HTML headings <h1> to <h6>
-Defines a paragraph<p></p>
+Defines a paragraphC::<p></p>
 Inserts a single line breakC::<br></br>
 Defines a thematic change in the contentC::<hr></hr>
 Defines a commentC::<!--...-->
@@ -36,7 +36,7 @@ Defines text that is no longer correctC::<s></s>
 Defines sample output from a computer programC::<samp></samp>
 Defines smaller textC::<small><small>
 Defines important textC::<strong></strong>
-Defines subscripted textC:<sub></sub>
+Defines subscripted textC::<sub></sub>
 Defines superscripted textC::<sup></sup>
 Defines a date/timeC::<time></time>
 Defines text that should be stylistically different from normal textC::<u></u>

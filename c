@@ -35,15 +35,15 @@ class Line
   def dump
     output = ""
     if @copy
-      output += sprintf("%-3d", @cpIndex)
+      output += sprintf("%-4d", @cpIndex)
     else
-      output += "   "
+      output += " " * 4
     end
-    output += " #{@text}" if @text
+    output += "#{@text}" if @text
     output += " :" if @text && @text != "" && @copy
     output += "\e[36m #{@copy}\e[0m" if @copy
     @lineLen = output.length
-    @lineLen = @lineLen - 8 if @copy # Subtact the length of "\e[36m\e[0m" since these are not printed
+    @lineLen = @lineLen - 9 if @copy # Subtact the length of "\e[36m\e[0m" since these are not printed
     return output
   end
 end
@@ -88,7 +88,7 @@ class Block
     output = ""
     if lineNo == 0
       hdr = " H:#{hdrNo} #{@header} "
-      len = ((@lineLenMax - (hdr.length)) / 2)
+      len = ((@lineLenMax - (hdr.length)) / 2) + 1 # +1 for rounding up
       len = 1 if len < 1 # Make sure that we don't "overrun"
       output = "\e[31m"
       output += "=" * len
@@ -96,7 +96,7 @@ class Block
       output += "=" * len
       output += " " * HDR_SPACING
       output += "\e[0m"
-      @hdrLen = output.length - 8 # -8 for the coloring tags
+      @hdrLen = output.length - 9 # -9 for the coloring tags
       return output
     end
     len = 0
@@ -105,7 +105,6 @@ class Block
       len = @lines[lineNo-1].lineLen
     end
     output += " " * (@hdrLen - len)
-
  end
 end
 
@@ -129,7 +128,6 @@ class Cheatsheet
 
     firstHeader = true
     b = Block.new("Default")
-
     rdLines = IO.read("#{file}")
     rdLines.each_line do |line|
       line = line.tr("\n", "")
@@ -177,7 +175,6 @@ class Cheatsheet
     totalLineLen = getNextLen -1 # Get the first header length
     blkStart = 0
     for blkNo in 0..@blocks.length-1
-
       lineCnt = @blocks[blkNo].lineCnt if @blocks[blkNo].lineCnt > lineCnt
       totalLineLen += getNextLen blkNo
       if totalLineLen >= row || blkNo == @blocks.length-1
