@@ -2,5 +2,5 @@ H::Clone
 git clone ssh://soft02.dk.vitesse.com/proj/sw/git/webstax2  branch-estax-rel-3_60_mass
 vtss-webstax-clone
 vtss-webstax-clone clean2
-git clone ssh://soft02.dk.vitesse.com/proj/sw/git/vtss-buildroot.git
-Revert chnges for a file C::git checkout -- <file>
+C::git clone ssh://soft02.dk.vitesse.com/proj/sw/git/vtss-buildroot.git
+Revert changes for a file C::git checkout -- <file>

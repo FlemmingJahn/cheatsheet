@@ -1,0 +1,94 @@
+H::Automatic variables
+The name of the target.C::$@
+The target member name, when the target is an archive member.C::$%
+The name of the first (or only) prerequisite.C::$<
+The names of all the prerequisites that are newer than the target, with spaces between them.C::$?
+The names of all the prerequisites, with spaces between them. Omits duplicate prerequisitesC::$^
+The names of all the prerequisites, with spaces between them. Does not omits duplicate prerequisitesC::$+
+The stem with which an implicit rule matches.C::$*
+The directory part and the file-within-directory part of $@C::$(@D) or $(@F)
+The directory part and the file-within-directory part of $*C::$(*D) or $(*D)
+The directory part and the file-within-directory part of $%C::$(%D) or $(%F)
+The directory part and the file-within-directory part of $<C::$(<D) or $(<F)
+The directory part and the file-within-directory part of $^C::$(^D) or$(^F)
+The directory part and the file-within-directory part of $+C::$(+F) or $(+D)
+The directory part and the file-within-directory part of $?C::$(?D) or $(?F)
+H::Built-in functions
+Replace from with to in text.C::$(subst from,to,text)
+Replace words matching pattern with replacement in text.C::$(patsubst pattern,replacement,text)
+Remove excess whitespace characters from string.C::$(strip string)
+Locate find in text.C::$(findstring find,text)
+Select words in text that match one of the pattern words.C::$(filter pattern...,text)
+Select words in text that do not match any of the pattern words.C::$(filter-out pattern...,text)
+Sort the words in list lexicographically, removing duplicates.C::$(sort list)
+Extract the directory part of each file name.C::$(dir names...)
+Extract the non-directory part of each file name.C::$(notdir names...)
+Extract the suffix (the last dot and following characters) of each file name.C::$(suffix names...)
+Extract the base name (name without suffix) of each file name.C::$(basename names...)
+Append suffix to each word in names.C::$(addsuffix suffix,names...)
+Prepend prefix to each word in names.C::$(addprefix prefix,names...)
+Join two parallel lists of words.C::$(join list1,list2)
+Extract the nth word (one-origin) of text.C::$(word n,text)
+Count the number of words in text.C::$(words text)
+Returns the list of words in text from s to e.C::$(wordlist s,e,text)
+Extract the first word of names.C::$(firstword names...)
+Find file names matching a shell file name pattern (not a `%' pattern).C::$(wildcard pattern...)
+When this function is evaluated, make generates a fatal error with the message text.C::$(error text...)
+When this function is evaluated, make generates a warning with the message text.C::$(warning text...)
+Execute a shell command and return its output.C::$(shell command)
+Return a string describing how the make variable variable was defined.C::$(origin variable)
+Evaluate text with var bound to each word in words, and concatenate the results.C::$(foreach var,words,text)
+Evaluate the var replacing any references to $(1),$(2) with the 1st, 2nd, etc. param values.C::$(call var,param,...)
+H::OPTIONS
+-m   These options are ignored for compatibility with other versions of make.
+-C dir
+     Change to directory dir before reading the makefiles or doing anything else.  If multiple -C options are
+     specified, each is interpreted relative to the previous one:  -C / -C etc is equivalent to -C /etc.  This is
+     typically used with recursive invocations of make.
+-d   Print debugging information in addition to normal processing.  The debugging information says which files
+     are being considered for remaking, which file-times are being compared and with what results, which files
+     actually need to be remade, which implicit rules are considered and which are applied---everything
+     interesting about how make decides what to do.
+-e   Give variables taken from the environment precedence over variables from makefiles.
+-f file
+     Use file as a makefile.
+-i   Ignore all errors in commands executed to remake files.
+-I dir
+     Specifies a directory dir to search for included makefiles.  If several -I options are used to specify
+     several directories, the directories are searched in the order specified.  Unlike the arguments to other
+     flags of make, directories given with -I flags may come directly after the flag:  -Idir is allowed, as well as
+     -I dir.  This syntax is allowed for compatibility with the C preprocessor's -I flag.
+-j jobs
+     Specifies the number of jobs (commands) to run simultaneously.  If there is more than one -j option,
+     the last one is effective.  If the -j option is given without an argument, make will not limit the number of
+     jobs that can run simultaneously.
+-k   Continue as much as possible after an error.  While the target that failed, and those that depend on it, cannot
+     be remade, the other dependencies of these targets can be processed all the same.
+-l
+-l load
+     Specifies that no new jobs (commands) should be started if there are others jobs running and the load average
+     is at least load (a floating-point number).  With no argument, removes a previous load limit.
+-n   Print the commands that would be executed, but do not execute them.
+-o file
+     Do not remake the file file even if it is older than its dependencies, and do not remake anything on account
+     of changes in file.  Essentially the file is treated as very old and its rules are ignored.
+-p   Print the data base (rules and variable values) that results from reading the makefiles; then execute as
+     usual or as otherwise specified.  This also prints the version information given by the -v switch (see below).
+     To print the data base without trying to remake any files, use make -p -f/dev/null.
+-q   ``Question mode''.  Do not run any commands, or print anything; just return an exit status that is zero if
+     the specified targets are already up to date, nonzero otherwise.
+-r   Eliminate use of the built-in implicit rules.  Also clear out the default list of suffixes for suffix rules.
+-s   Silent operation; do not print the commands as they are executed.
+-S   Cancel the effect of the -k option.  This is never necessary except in a recursive make where -k might be
+     inherited from the top-level make via MAKEFLAGS or if you set -k in MAKEFLAGS in your environment.
+-t   Touch files (mark them up to date without really changing them) instead of running their commands.  This
+     is used to pretend that the commands were done, in order to fool future invocations of make.
+-v   Print the version of the make program plus a copyright, a list of authors and a notice that there is no
+     warranty.  After this information is printed, processing continues normally.  To get this information
+     without doing anything else, use make -v -f/dev/null.
+-w   Print a message containing the working directory before and after other processing.  This may be useful for
+     tracking down errors from complicated nests of recursive make commands.
+-W file
+     Pretend that the target file has just been modified. When used with the -n flag, this shows you what would
+     happen if you were to modify that file.  Without -n, it is almost the same as running a touch command on the
+     given file before running make, except that the modification time is changed only in the imagination of make.
