@@ -5,7 +5,7 @@
 #    This program is free software: You can do whatever you like - no limitation.
 #
 #    Comments, suggestions, questions to:
-require 'pry'      # For debugging
+#require 'pry'      # For debugging
 require 'optparse' # For command line parsing
 require 'io/console'
 require 'clipboard'
@@ -90,11 +90,13 @@ class Block
       hdr = " H:#{hdrNo} #{@header} "
       len = ((@lineLenMax - (hdr.length)) / 2)
       len = 1 if len < 1 # Make sure that we don't "overrun"
-      output = "=" * len
+      output = "\e[31m"
+      output += "=" * len
       output += hdr
       output += "=" * len
       output += " " * HDR_SPACING
-      @hdrLen = output.length
+      output += "\e[0m"
+      @hdrLen = output.length - 8 # -8 for the coloring tags
       return output
     end
     len = 0
@@ -178,7 +180,6 @@ class Cheatsheet
 
       lineCnt = @blocks[blkNo].lineCnt if @blocks[blkNo].lineCnt > lineCnt
       totalLineLen += getNextLen blkNo
-#      binding.pry
       if totalLineLen >= row || blkNo == @blocks.length-1
         dumpLines blkStart, blkNo, lineCnt
 
