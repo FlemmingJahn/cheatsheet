@@ -1,0 +1,2 @@
+H:Setup
+Get rid of multiple clipboardsC::a5Cutocutsel - fork &; autocutsel -selection PRIMARY -fork &
