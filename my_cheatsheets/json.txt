@@ -1,27 +1,12 @@
-json
-====
-
-    Find valid json parameters - I web /json_spec e.g. 10.10.133.77/json_spec
-
-    curl -d '{"id":"json","method":"port.config.base.get", "params":[]}\'  http://admin@10.10.133.89/json_rpc '
-
-    vson -d 10.10.133.77 call lldp.config.port.get 
-
-    vson -d 10.10.133.77 call "lldp.config.port.get" 
-
-    vson  -d 10.10.133.77 call --dump-response  "lldp.config.port.get"
-
-    vson  -d 10.10.133.77 call --dump-requests --dump-response  "lldp.config.port.get" "2.5G 1/2"
-
-    vson  -d 10.10.133.77 call --dump-requests --dump-response  lldp.config.port.set Gi 1/2 '{AdminState:txAndRx,CdpAware:false,OptionalTlvs:255}' 
-
-    vson  -d 10.10.133.77 call --dump-requests --dump-response  "lldp.config.port.set" "Gi 1/2" '{"AdminState":"txAndRx","CdpAware":false,"OptionalTlvs":255}' 
-
-    vson  -d 10.10.133.77 call --dump-requests --dump-response  lldp.config.interfaces.get 2.5G 1/2
-
-    vson  -d 10.10.133.77 call --dump-requests --dump-response  lldp.config.interfaces.get 2.5G 1/2
-
-    vson  -d 10.10.133.77 call --dump-requests --dump-response  lldp.status.statistics.global-counters.get 
-
-    vson  -d 10.10.133.77 call --dump-requests --dump-response  lldp.status.statistics.global-counters.get 
-
+Find valid json parameters - I web /json_spec e.g. 10.10.133.77/json_spec
+curl -d '{"id":"json","method":"port.config.base.get", "params":[]}\'  http://admin@10.10.133.89/json_rpc '
+vson -d 10.10.133.77 call lldp.config.port.get
+vson -d 10.10.133.77 call "lldp.config.port.get"
+vson  -d 10.10.133.77 call --dump-response  "lldp.config.port.get"
+vson  -d 10.10.133.77 call --dump-requests --dump-response  "lldp.config.port.get" "2.5G 1/2"
+vson  -d 10.10.133.77 call --dump-requests --dump-response  lldp.config.port.set Gi 1/2 '{AdminState:txAndRx,CdpAware:false,OptionalTlvs:255}'
+vson  -d 10.10.133.77 call --dump-requests --dump-response  "lldp.config.port.set" "Gi 1/2" '{"AdminState":"txAndRx","CdpAware":false,"OptionalTlvs":255}'
+vson  -d 10.10.133.77 call --dump-requests --dump-response  lldp.config.interfaces.get 2.5G 1/2
+vson  -d 10.10.133.77 call --dump-requests --dump-response  lldp.config.interfaces.get 2.5G 1/2
+vson  -d 10.10.133.77 call --dump-requests --dump-response  lldp.status.statistics.global-counters.get
+vson  -d 10.10.133.77 call --dump-requests --dump-response  lldp.status.statistics.global-counters.get

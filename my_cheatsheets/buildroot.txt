@@ -5,3 +5,4 @@ H::MSCC Redboot
 CheckoutC::make mscc-redboot
 Build ServalC::make mscc-redboot-serval
 export PATH=$PATH:/opt/vtss-cross-ecos-mips32-24kec-v2/bin
+Clean for new reboot build (serval)C::rm -rf redboot-R* ; rm -rf ./output/build/mscc-redboot-serval1-e98f9bd5a37fd753f46f8edfff0c12d6d4b3018c/

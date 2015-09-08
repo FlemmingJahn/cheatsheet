@@ -1,7 +1,0 @@
-ubuntu
-======
-
-    .bashrc is not loaded when ssh to the computer. Need to be sourced by  .bash_profile file
-
-    .bashrc is not loaded when ssh to the computer. Need to be sourced by  .bash_profile file
-

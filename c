@@ -323,8 +323,12 @@ if options[:copytext]
 end
 
 if plainTxt.nil? && hdrNo
-  puts "Error: No copytext found for number:#{hdrNo}" if  $copyLines.length < hdrNo
-  Clipboard.copy $copyLines[hdrNo -1]
+  if  $copyLines.length < hdrNo
+    puts "Error: No copytext found for number:#{hdrNo}"
+  else
+    Clipboard.copy $copyLines[hdrNo -1]
+    puts "#{$copyLines[hdrNo -1]} copied to clipboard"
+  end
   exit
 end
 
