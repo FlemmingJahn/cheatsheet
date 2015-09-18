@@ -1,0 +1,17 @@
+H::Files and Buffers
+C-x C-f   Find file (or create if not there); prompts for file name
+C-x C-s   Save file
+C-x C-w   Write file; prompts for new name
+C-x s     Save modified buffers; asks about each
+C-x b     Select buffer; prompts for buffer name
+C-x C-b   List buffers; shows in other window
+C-x k     Kill buffer; prompts for buffer name
+H::Searching/Replacing
+C-s     Incremental search forward; searches as you type
+C-r     Incremental search backward
+C-M-s   Regexp search forward (there are differences in Emacs regexp syntax wrt Perl, etc.)
+C-M-r   Regexp search backward
+M-x replace-string RET  String replace from here to end of buffer; prompts for string and replacement
+M-x query-replace RET   String replace from here to end of buffer, querying for each occurrence
+M-x grep RET      Prompts for a grep command, shows hits in a buffer
+C-x `    Visit next grep hit

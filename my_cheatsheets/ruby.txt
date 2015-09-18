@@ -3,3 +3,7 @@ H::Debugging
 C::irl
 For getting next, step in pryC::gem install nav
 For getting next, step in pryC::gem install pry-nav
+H::Accessors
+Creates reader methodsC::attr_reader   :attribute
+Creates setter methodsC::attr_writer   :attribute
+Creates both readers and writersC::attr_accessor :attribute

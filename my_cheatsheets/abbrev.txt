@@ -7,3 +7,5 @@ BPDU - Bridge PDU
 H::IP
 DSCP - DiffServ Code Point
 TLV - Type Length Value
+H::SOFTWARE
+BSP - Board Support Package

@@ -5,7 +5,11 @@
 #    This program is free software: You can do whatever you like - no limitation.
 #
 #    Comments, suggestions, questions to:
-#require 'pry'      # For debugging
+
+
+if Gem::Specification::find_all_by_name('pry').any?
+  require 'pry'      # For debugging
+end
 require 'optparse' # For command line parsing
 require 'io/console'
 require 'clipboard'
@@ -253,12 +257,16 @@ def checkOptions options
     opts.banner = "Usage: m [cheatSheet] [hdrNo] [option] [<String: What to remember>]"
     opts.version = 0.1
 
-    opts.on("-H", "--HEADER <string>", "Insert new header.") do |h|
+    opts.on("-h", "--header <string>", "Insert new header.") do |h|
       options[:header] = "H::#{h}"
     end
 
-    opts.on("-C", "--COPYTEXT <string>", "Insert new \"coopy\" text.") do |h|
+    opts.on("-c", "--copytext <string>", "Insert new \"copy\" text.") do |h|
       options[:copytext] = "C::#{h}"
+    end
+
+    opts.on("-e", "--execute", "Insert new \"copy\" text.") do
+      options[:execute] = true
     end
 
   end.order!
@@ -324,8 +332,13 @@ if plainTxt.nil? && hdrNo
   if  $copyLines.length < hdrNo
     puts "Error: No copytext found for number:#{hdrNo}"
   else
-    Clipboard.copy $copyLines[hdrNo -1]
-    puts "#{$copyLines[hdrNo -1]} copied to clipboard"
+    if options[:execute]
+      puts "Executing #{$copyLines[hdrNo -1]}"
+      system $copyLines[hdrNo -1]
+    else
+      Clipboard.copy $copyLines[hdrNo -1]
+      puts "#{$copyLines[hdrNo -1]} copied to clipboard"
+    end
   end
   exit
 end
