@@ -17,3 +17,5 @@ List usersC::cut -d: -f1 /etc/passwd
 Give existing user sudo rightsC::sudo usermod -a -G sudo <user>
 Add new userC::sudo adduser <user>
 Show users logged inC::w
+H::Programs
+UninstallC::sudo apt-get purge <program>

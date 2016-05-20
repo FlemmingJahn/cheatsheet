@@ -1,0 +1,4 @@
+H::Default
+H::Server
+Start XAMPPC::sudo /opt/lampp/share/xampp-control-panel/xampp-control-panel
+XAMPP index fileC::cd /opt/lampp/htdocs
