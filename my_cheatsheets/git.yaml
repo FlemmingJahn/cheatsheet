@@ -1,0 +1,7 @@
+---
+- projects:
+  - Descr: How to checkout a new project
+    CopyTxt: git clone [url]
+- default:
+  - Descr: Clenup everything (done at top dir)
+    CopyTxt: git clean -df; git reset --hard

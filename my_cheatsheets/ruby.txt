@@ -7,3 +7,7 @@ H::Accessors
 Creates reader methodsC::attr_reader   :attribute
 Creates setter methodsC::attr_writer   :attribute
 Creates both readers and writersC::attr_accessor :attribute
+H::Debugging
+KKK
+H::1
+KKKK

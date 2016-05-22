@@ -13,14 +13,12 @@ if Gem::Specification::find_all_by_name('pry').any?
 end
 
 if Gem::Specification::find_all_by_name('clipboard').any?
-  #require 'clipboard'
+  require 'clipboard'
 end
 
 require 'optparse' # For command line parsing
 require 'io/console'
 require 'yaml'
-
-
 
 class Cheatsheet
   HDR_SPACING = 5           # Number of spaces between each "header section"
@@ -50,13 +48,17 @@ class Cheatsheet
   def getCopyTxt cpIndex
     cnt = 0
     @sections.each { |sec|
-      if !sec["CopyTxt"].nil?
-        if cnt = cpIndex
-          return sec["CopyTxt"]
+      key=sec.keys[0]
+      sec[key].each { |s|
+    	if !s["CopyTxt"].nil?
+          if cnt == cpIndex
+            return s["CopyTxt"]
+          end
+          cnt += 1
         end
-        cnt += 1
-      end
+      }
     }
+    return ""
   end
 
   # Print one line within the section
@@ -193,9 +195,11 @@ class Cheatsheet
   def findFileName cheatName
     return "#{cheatName}.yaml" if File.file?("#{PATH}/#{cheatName}.yaml") && !cheatName.nil? # Excat match
 
+    pwd = Dir.pwd
     Dir.chdir(PATH)
     files = Dir.glob("#{cheatName}*.yaml")
-
+    Dir.chdir(pwd)
+	
     if files.length == 0 && !cheatName.nil?
       # Create a new cheatSheet
       puts "New cheatSheet named #{cheatName} created"
@@ -273,10 +277,10 @@ c = Cheatsheet.new()
 #
 def checkOptions options
   OptionParser.new do |opts|
-    opts.banner = "Usage: m [cheatSheet] [hdrNo] [option] [<String: What to remember>]"
-    opts.version = 0.1
+    opts.banner = "Usage: c [cheatSheet] [cpIndex] [option] [<String: Description of what to remember>]"
+    opts.version = 0.2
 
-    opts.on("-h", "--header <string>", "Insert new header.") do |h|
+    opts.on("-s", "--section <string>", "Section header.") do |h|
       options[:header] = "#{h}"
     end
 
@@ -284,13 +288,33 @@ def checkOptions options
       options[:copytext] = "#{h}"
     end
 
-    opts.on("-s", "--summary", "Prints a description of this script.") do
+    opts.on("-d", "--description", "Prints a description of this script.") do
       puts "If you like me are working with a Linux terminal all day long, but also have as poor a memory as me, "
-      puts "you probably have a document with all the command and cheats you use. This script can help you out,  "
+      puts "you probably have a document with all the commands and cheats you use. This script can help you out,  "
       puts "and can be used to easily store you cheats and easily retreat them again. This all from the command line."
-      puts "Example : You want to store a cheat for how to checkout a project from git."
+      puts "Each cheatsheet is stored in it's own file (a yaml text file, which you can edit in any text editor). You can order your cheats in sections with the -s option" 	
+      puts "For each cheat you can have a 'copyText', which can we used to easy get the 'copytext' into the clipboard,"
+      puts "so you can paste it e.g. into your command line"	
+      puts ""   
+      puts "Examples:"
+      puts ""   
+      puts "Example for printing help : c --help"
+      puts "Usage: c [cheatSheet] [cpIndex] [option] [<String: Description of what to remember>]"
+      puts "-s, --section  <string>          Section header."
+      puts "-c, --copytext <string>          Insert new 'copy' text."
+      puts "-d, --description                Prints a description of this script."
       puts ""
-      puts 'Add cheat : ruby c git -h "projects" "How to checkout a new project" -c "git clone [url]"'
+      puts "Example : You want to store a cheat for how to checkout a project from git."
+      puts 'Command for adding cheat : c git -h "projects" "How to checkout a new project" -c "git clone [url]"'	
+      puts ""
+      puts "Example : Show your 'cheats' for git"
+      puts "Command for showing cheat : c git"
+      puts "Result :  ===================== projects ========= ============     ================================= default ================================"
+      puts "Result :  0  How to checkout a new project :  git clone [url]       1  Cleanup everything (done at top dir) :  git clean -df; git reset --hard"
+      puts ""
+      puts "Example : Get the 'copy text' into clipboard"
+      puts "Command for getting copy text '1' from the last shown cheats : git 1"
+      puts "Result : 'git clean -df; git reset --hard' copied to clipboard, now you can paste the 'git clean -df; git reset --hard' command"    
       exit
     end
   end.order!
@@ -324,7 +348,7 @@ c.readYamlFile "#{PATH}/#{file}"
 
 argIsInt = Integer(arg1) rescue nil
 if argIsInt
-  hdrNo = arg1.to_i
+  cpIndex = arg1.to_i
   plainTxt = checkOptions options
 else
   plainTxt = arg1
@@ -337,16 +361,14 @@ if  anyMoreArg
   exit
 end
 
-if plainTxt.nil? && hdrNo
-  binding.pry
-  cpTxt = c.getCopyTxt hdrNo
+if plainTxt.nil? && cpIndex
+  cpTxt = c.getCopyTxt cpIndex
 
-  if  $copyLines.length < hdrNo
-    puts "Error: No copytext found for number:#{hdrNo}"
+  if  cpTxt == ""
+    puts "Error: No copytext found for number:#{cpIndex}"
   else
-
-    Clipboard.copy $copyLines[hdrNo -1]
-    puts "#{$copyLines[hdrNo -1]} copied to clipboard"
+    puts "'#{cpTxt}' copied to clipboard"
+    Clipboard.copy cpTxt
   end
   exit
 end
