@@ -1,0 +1,6 @@
+---
+- Servers:
+  - Descr: Start tftp service
+    CopyTxt: sudo service tftpd-hpa restart
+  - Descr: Start HTTP server
+    CopyTxt: python -m SimpleHTTPServer
