@@ -1,0 +1,11 @@
+---
+- VSON:
+  - Descr: Get without parameters
+    CopyTxt: vson  -d 10.10.133.77 call --dump-requests --dump-response  lldp.status.statistics.global-counters.get
+  - Descr: Find commands
+    CopyTxt: vson -d 192.168.1.200 grep firmware
+  - Descr: Get license description
+    CopyTxt: time vson -cd 192.168.1.200 call firmware.status.licenseDescription.get
+- VSON - How it works:
+  - Descr: The JSON spec is download to your home directory and is named .vtss-json-rpc.spec
+    CopyTxt: 

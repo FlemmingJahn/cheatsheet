@@ -4,3 +4,5 @@
     CopyTxt: sudo service tftpd-hpa restart
   - Descr: Start HTTP server
     CopyTxt: python -m SimpleHTTPServer
+  - Descr: Remembering ssh login password for soft09 server
+    CopyTxt: ssh-copy-id jenkins@soft-test09

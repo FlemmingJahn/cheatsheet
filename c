@@ -7,283 +7,326 @@
 #    Comments, suggestions, questions to:
 
 
+
 if Gem::Specification::find_all_by_name('pry').any?
   require 'pry'      # For debugging
 end
+
+if Gem::Specification::find_all_by_name('clipboard').any?
+  require 'clipboard'
+end
+
 require 'optparse' # For command line parsing
 require 'io/console'
-require 'clipboard'
-
-
-$copyLines = []
-
-class Line
-  attr_accessor :text
-  attr_accessor :copy
-  attr_accessor :lineLen
-
-  def initialize
-    @type = nil
-    @text = nil # Normal comment/test
-    @copy = nil # Text that shall be numbered for copy posiblity
-    @cpIndex = 0
-    @lineLen = 0
-  end
-
-  def addCopyText string
-    @copy = string
-    $copyLines.push(string.tr("\n", ""))
-    @cpIndex = $copyLines.length
-  end
-
-  def dump
-    output = ""
-    if @copy
-      output += sprintf("%-4d", @cpIndex)
-    else
-      output += " " * 4
-    end
-    output += "#{@text}" if @text
-    output += " :" if @text && @text != "" && @copy
-    output += "\e[36m #{@copy}\e[0m" if @copy
-    @lineLen = output.length
-    @lineLen = @lineLen - 9 if @copy # Subtact the length of "\e[36m\e[0m" since these are not printed
-    return output
-  end
-end
-
-
-class Block
-  attr_accessor :header
-  attr_accessor :lineLenMax # The length of the line with max. length within the block
-
-  HDR_LEN_MIN = 10
-  HDR_SPACING = 5
-  def initialize name
-    @header = name
-    @lines = []
-    @lineLenMax = HDR_LEN_MIN
-    @hdrLen = HDR_LEN_MIN
-  end
-
-  def lineCnt
-    return @lines.length
-  end
-
-  def addLine newLine
-    l = Line.new
-    l.text, copyText = newLine.split("C::")
-    l.addCopyText copyText if copyText
-    l.dump # Call dump in oprder to update lineLen
-    @lines.push(l)
-    @lineLenMax = l.lineLen if @lineLenMax < l.lineLen
-  end
-
-  def write file
-    file.write("H::#{@header}\n")
-    @lines.each do |l|
-      file.write(l.text)
-      file.write("C::#{l.copy}") if l.copy
-      file.write("\n")
-    end
-  end
-
-  def dump hdrNo, lineNo
-    output = ""
-    if lineNo == 0
-      hdr = " H:#{hdrNo} #{@header} "
-      len = ((@lineLenMax - (hdr.length)) / 2) + 1 # +1 for rounding up
-      len = 1 if len < 1 # Make sure that we don't "overrun"
-      output = "\e[31m"
-      output += "=" * len
-      output += hdr
-      output += "=" * len
-      output += " " * HDR_SPACING
-      output += "\e[0m"
-      @hdrLen = output.length - 9 # -9 for the coloring tags
-      return output
-    end
-    len = 0
-    if lineNo <= @lines.length
-      output =  @lines[lineNo-1].dump
-      len = @lines[lineNo-1].lineLen
-    end
-    output += " " * (@hdrLen - len)
- end
-end
-
+require 'yaml'
 
 class Cheatsheet
+  HDR_SPACING = 5           # Number of spaces between each "header section"
+  attr_accessor :cpIndex    # Index for the line to copy to clipboard
+
   def initialize
-    @blocks = []
+    @cpIndex  = 0
+    @maxLen   = {}          # Max line length within a section
+    @linesCnt = {}
+    @sections = []          # Array of section containning the chaeats
   end
 
-  def insertLine block, line
-   if /^H::/.match(line)
-     block.header = line.gsub(/^H::/,"")
-     block.lineLenMax = block.header.length + 8 # + 8 is for the 2 spaces + minimum 2 "=" 1 and 4 charater for the header number
-    else
-      block.addLine line
-    end
-    return block
+  # Pinting header
+  def printHeader hdrTxt, hdrLen
+    hdr = " #{hdrTxt} "
+    len = ((hdrLen - (hdr.length)) / 2) + 1 # +1 for rounding up
+    len = 1 if len < 1 # Make sure that we don't "overrun"
+    output = "\e[31m" # Coloring
+    output += "=" * len
+    output += hdr
+    output += "=" * len
+    output += " " * HDR_SPACING
+    output += "\e[0m"
+    print output
   end
 
-  def parse file
-
-    firstHeader = true
-    b = Block.new("Default")
-    rdLines = IO.read("#{file}")
-    rdLines.each_line do |line|
-      line = line.tr("\n", "")
-      if /^H::/.match(line)
-        if firstHeader
-          b.header = "Default"
-        else
-          @blocks.push(b)
+  def getCopyTxt cpIndex
+    cnt = 0
+    @sections.each { |sec|
+      key=sec.keys[0]
+      sec[key].each { |s|
+    	if !s["CopyTxt"].nil?
+          if cnt == cpIndex
+            return s["CopyTxt"]
+          end
+          cnt += 1
         end
-        b = Block.new(line)
-        firstHeader = false
-      end
-      b = insertLine b, line
-    end
-    @blocks.push(b)
+      }
+    }
+    return ""
   end
 
-  def insert line, hdrNo
-    if /^H::/.match(line)
-      b = Block.new(line)
-      if hdrNo
-        @blocks.insert(hdrNo + 1, b)
-      else
-        @blocks.push(b)
-      end
+  # Print one line within the section
+  def printLine copyText, descr, len
+    output = ""
+
+    # Calculate and print 2 digit copy index
+    if copyText
+      output   += sprintf("%-2d ", cpIndex)
+      @cpIndex += 1
+    elsif descr
+      output   += "-" + " " * 2
     end
-    hdrNo = -1 if hdrNo.nil?
-    insertLine @blocks[hdrNo], line
+
+    # Print the description
+    output += "#{descr}" if descr
+
+    if descr && copyText
+      output += " : "
+    end
+
+    if copyText
+      output += "\e[34m #{copyText}\e[0m"  # Coloring
+      len    += 9  # +9 for the coloring characters above
+    end
+
+    # Append spaces so all lines becomes same length
+    append = (2 + HDR_SPACING + len - output.length)
+    output += " " * append if append > 0
+
+    print output
   end
 
-  def write f
-    File.open(f, 'w') { |file|
-      @blocks.each do |blk|
-        blk.write file
-      end
+  # Find the max line length for all the lines within a section
+  def findLinesMaxLength
+    @sections.each { |h|
+      maxLen = 0
+      key = h.keys[0]
+
+      h[key].each {|l|
+        len = 6
+        len += l["Descr"].length   if !l["Descr"].nil?
+        len += l["CopyTxt"].length if !l["CopyTxt"].nil?
+        maxLen = len if len > maxLen
+      }
+      @maxLen[key]=maxLen
+      @linesCnt[key]=h[key].length
     }
   end
 
+
+  def readYamlFile fileName
+    if File.file?(fileName) && !File.zero?(fileName)
+      @sections = YAML.load_file(fileName)
+    end
+  end
+
+  def writeYamlFile f
+    File.open(f, 'w') { |file|
+     file.puts(@sections.to_yaml)
+    }
+  end
+
+  # Print all section from "start" to "endpoint"
+  def dumpIt start, endpoint
+    maxLines = 0
+
+    # Print the headers and figure out lines cnt for the section with most lines
+    for i in start..endpoint
+      key = @sections[i].keys[0]
+      printHeader(key, @maxLen[key])
+      maxLines = @linesCnt[key] -1 if @linesCnt[key] > maxLines
+    end
+    print("\n")
+
+    # Pritn all the lines in the sections
+    lineNo = 0
+    for lineNo in 0..maxLines
+      for i in start..endpoint
+        key = @sections[i].keys[0]
+        l = @sections[i][key][lineNo]
+
+        if !l.nil?
+          printLine(l["CopyTxt"], l["Descr"], @maxLen[key])
+	else
+          printLine(nil, nil, @maxLen[key])
+        end
+      end
+      print("\n")
+    end
+   end
+
+  # Print out the sections
   def dump
-    col, row = IO.console.winsize
-    size = col
-    hdrArrLen = 0
+    findLinesMaxLength # Find line count and lines length for all the sections
 
-    lineCnt = @blocks[0].lineCnt
-    totalLineLen = getNextLen -1 # Get the first header length
-    blkStart = 0
-    for blkNo in 0..@blocks.length-1
-      lineCnt = @blocks[blkNo].lineCnt if @blocks[blkNo].lineCnt > lineCnt
-      totalLineLen += getNextLen blkNo
-      if totalLineLen >= row || blkNo == @blocks.length-1
-        dumpLines blkStart, blkNo, lineCnt
+    currentLen = 0
+    endPoint = @sections.length-1
+    start = 0
 
-        lineCnt = 0
-        blkStart = blkNo + 1
-        totalLineLen = getNextLen blkNo
-      end
-    end
-  end
+    while 1 do
+      col, row = IO.console.winsize
 
-  private
+      # Figure out how many section that can be printed with the screen width
+      for i in start..@sections.length-1
+         key = @sections[i].keys[0]
+         len = @maxLen[key] + HDR_SPACING
+         endPoint = i
 
-  def getNextLen blkNo
-    if blkNo != @blocks.length-1
-      return @blocks[blkNo + 1].lineLenMax + Block::HDR_SPACING
-    else
-      return @blocks[blkNo].lineLenMax + Block::HDR_SPACING
-    end
-  end
+         if (row - len) < 0
+           break
+         end
+         row -= len
+       end
 
-  def dumpLines blkStart, blkEnd, lineCnt
-    for i in 0..lineCnt
-      output = ""
-      for blkNo in blkStart..blkEnd
-        h = @blocks[blkNo]
-        output += h.dump blkNo, i
-      end
-      puts output
-    end
-    puts "" # New line between headers
-  end
-end
-
-# Function for find a file that matches the file given by the used.
-# If multiple files matches, then print the list of files, and exit
-def getFile fileName
-  return "#{fileName}.txt" if File.file?("#{PATH}/#{fileName}.txt") # Excat match
-
-  Dir.chdir(PATH)
-  files = Dir.glob("#{fileName}*.txt")
-
-  if files.length == 0
-    `touch #{fileName}.txt` # Create a new cheatSheet
-    puts "New cheatSheet named #{fileName} created"
-    return "#{fileName}.txt"
-  end
-
-  col, row = IO.console.winsize
-  totalLen = 0
-
-  if files.length > 1
-    puts "Multiple files found. Please select one of the below:"
-    files.each do |file|
-      # Print as many cheatsheets as possible horizontal as possible for the terminal
-      f = file.gsub("\.txt", "")
-      totalLen += 20
-      if totalLen >= row
-        printf("\n")
-        totalLen = 20
+      # If we exceed the screen width then we wait with the last secion
+      if endPoint && endPoint != start && endPoint != @sections.length-1
+        endPoint -= 1
       end
 
-      printf("%-20s", f)
+      #print the section that can fit within the screen width
+      dumpIt(start, endPoint)
+
+      # Continue with the next sections
+      start = endPoint + 1
+      if start > @sections.length-1
+        break
+      end
+     end
+   end
+
+  # Function for find a file that matches the file given by the used.
+  # If multiple files matches, then print the list of files, and exit
+  def findFileName cheatName
+    return "#{cheatName}.yaml" if File.file?("#{PATH}/#{cheatName}.yaml") && !cheatName.nil? # Excat match
+
+    pwd = Dir.pwd
+    Dir.chdir(PATH)
+    files = Dir.glob("#{cheatName}*.yaml")
+    Dir.chdir(pwd)
+
+    if files.length == 0 && !cheatName.nil?
+      # Create a new cheatSheet
+      puts "New cheatSheet named #{cheatName} created"
+      return "#{cheatName}.yaml"
     end
-    printf("\n")
-    exit
+
+    if cheatName.nil?
+      files = Dir.glob("*.yaml")
+    end
+
+    if files.length == 0
+      puts "No cheatsheet files found"
+      exit
+    end
+
+    if cheatName.nil? && files.length == 1
+      f = files[0].gsub("\.yaml", "")
+      puts "One cheatsheet file found : #{f}"
+      exit
+    end
+
+    if files.length > 1
+      totalLen = 0
+      puts "Multiple cheatsheet files found. Please select one of the below:"
+      files.each do |file|
+        # Print as many cheatsheets as possible horizontal as possible for the terminal
+        f = file.gsub("\.yaml", "")
+        totalLen += 20
+        if totalLen >= row
+          printf("\n")
+          totalLen = 20
+        end
+        printf("%-20s", f)
+      end
+      printf("\n")
+      exit
+    end
+
+    # Only one file found.
+    return "#{files[0]}"
   end
 
-  # Only one file found.
-  return files[0]
-end
+  # Insert a new "cheat"
+  def insert hdrTxt, descr, cpTxt
+    newlines = []
+    hdrTxt = "default" if hdrTxt.nil?
+    found = false
+    line = {"Descr"=>descr, "CopyTxt"=>cpTxt}
+    @sections.each { |h|
+      if h.has_key? hdrTxt
+        h[hdrTxt].push(line)
+        h[hdrTxt] = h[hdrTxt].uniq
+        found = true
+        break
+      end
+    }
 
+    if (!found)
+      newlines.push(line)
+      newlines = newlines.uniq
+      header= {hdrTxt=>newlines}
+      @sections.push(header)
+    end
+    @sections = @sections.uniq
+  end
+end #End class
+
+
+
+c = Cheatsheet.new()
+
+
+#
+# Option parser
+#
 def checkOptions options
   OptionParser.new do |opts|
-    opts.banner = "Usage: m [cheatSheet] [hdrNo] [option] [<String: What to remember>]"
-    opts.version = 0.1
+    opts.banner = "Usage: c [cheatSheet] [cpIndex] [option] [<String: Description of what to remember>]"
+    opts.version = 0.2
 
-    opts.on("-h", "--header <string>", "Insert new header.") do |h|
-      options[:header] = "H::#{h}"
+    opts.on("-s", "--section <string>", "Section header.") do |h|
+      options[:header] = "#{h}"
     end
 
     opts.on("-c", "--copytext <string>", "Insert new \"copy\" text.") do |h|
-      options[:copytext] = "C::#{h}"
+      options[:copytext] = "#{h}"
     end
 
-    opts.on("-e", "--execute", "Insert new \"copy\" text.") do
-      options[:execute] = true
+    opts.on("-d", "--description", "Prints a description of this script.") do
+      puts "If you like me are working with a Linux terminal all day long, but also have as poor a memory as me, "
+      puts "you probably have a document with all the commands and cheats you use. This script can help you out,  "
+      puts "and can be used to easily store you cheats and easily retreat them again. This all from the command line."
+      puts "Each cheatsheet is stored in it's own file (a yaml text file, which you can edit in any text editor). You can order your cheats in sections with the -s option"
+      puts "For each cheat you can have a 'copyText', which can we used to easy get the 'copytext' into the clipboard,"
+      puts "so you can paste it e.g. into your command line"
+      puts ""
+      puts "Examples:"
+      puts ""
+      puts "Example for printing help : c --help"
+      puts "Usage: c [cheatSheet] [cpIndex] [option] [<String: Description of what to remember>]"
+      puts "-s, --section  <string>          Section header."
+      puts "-c, --copytext <string>          Insert new 'copy' text."
+      puts "-d, --description                Prints a description of this script."
+      puts ""
+      puts "Example : You want to store a cheat for how to checkout a project from git."
+      puts 'Command for adding cheat : c git -h "projects" "How to checkout a new project" -c "git clone [url]"'
+      puts ""
+      puts "Example : Show your 'cheats' for git"
+      puts "Command for showing cheat : c git"
+      puts "Result :  ===================== projects ========= ============     ================================= default ================================"
+      puts "Result :  0  How to checkout a new project :  git clone [url]       1  Cleanup everything (done at top dir) :  git clean -df; git reset --hard"
+      puts ""
+      puts "Example : Get the 'copy text' into clipboard"
+      puts "Command for getting copy text '1' from the last shown cheats : git 1"
+      puts "Result : 'git clean -df; git reset --hard' copied to clipboard, now you can paste the 'git clean -df; git reset --hard' command"
+      exit
     end
-
   end.order!
   return ARGV.shift
 end
 
+
 options = {}
-
-
-
-cheat = Cheatsheet.new
-# Parse the cheatSheet or print list of cheatSheets
-
 cheatSheetName = checkOptions options
 
-
 PATH = File.dirname($0) + "/my_cheatsheets" # Get the path to the cheatsheets
+
 
 # If the first argument is a number then we copy the corrsponding copyText from the last sheet that was read
 nameIsInt = Integer(cheatSheetName) rescue nil
@@ -298,14 +341,14 @@ else
   arg1 = checkOptions options
 end
 
-file = (getFile cheatSheetName)
-file = "#{PATH}/#{file}"
+file = c.findFileName(cheatSheetName)
 IO.write("#{PATH}/cheatsheet.last", cheatSheetName) # Store that this is the latest cheatsheet that has been read.
-cheat.parse file
+c.readYamlFile "#{PATH}/#{file}"
+
 
 argIsInt = Integer(arg1) rescue nil
 if argIsInt
-  hdrNo = arg1.to_i
+  cpIndex = arg1.to_i
   plainTxt = checkOptions options
 else
   plainTxt = arg1
@@ -318,40 +361,27 @@ if  anyMoreArg
   exit
 end
 
-if options[:header]
-  cheat.insert options[:header], hdrNo
-  writeFile = true
-end
+if plainTxt.nil? && cpIndex
+  cpTxt = c.getCopyTxt cpIndex
 
-if options[:copytext]
-  plainTxt  = "" if plainTxt.nil?
-  plainTxt += options[:copytext]
-end
-
-if plainTxt.nil? && hdrNo
-  if  $copyLines.length < hdrNo
-    puts "Error: No copytext found for number:#{hdrNo}"
+  if  cpTxt == ""
+    puts "Error: No copytext found for number:#{cpIndex}"
   else
-    if options[:execute]
-      puts "Executing #{$copyLines[hdrNo -1]}"
-      system $copyLines[hdrNo -1]
-    else
-      Clipboard.copy $copyLines[hdrNo -1]
-      puts "#{$copyLines[hdrNo -1]} copied to clipboard"
-    end
+    puts "'#{cpTxt}' copied to clipboard"
+    Clipboard.copy cpTxt
   end
   exit
 end
 
-
-if plainTxt
-  cheat.insert plainTxt, hdrNo
-  writeFile = true
-end
-
-if writeFile
-  cheat.write "#{file}"
+if cheatSheetName.nil?
   exit
 end
 
-cheat.dump
+if !options[:header].nil? || !plainTxt.nil? || !options[:copytext].nil?
+  c.insert options[:header], plainTxt, options[:copytext]
+end
+
+# We do always print out the cheats
+c.dump
+
+c.writeYamlFile "#{PATH}/#{file}"

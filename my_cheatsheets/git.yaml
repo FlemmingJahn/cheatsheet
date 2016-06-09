@@ -5,3 +5,9 @@
 - default:
   - Descr: Clenup everything (done at top dir)
     CopyTxt: git clean -df; git reset --hard
+- tags:
+  - Descr: See date for tags
+    CopyTxt: git log --tags --simplify-by-decoration --pretty="format:%ai %d"
+- debugging:
+  - Descr: Doing binary seach
+    CopyTxt: git bisect start; git bisect bad; git bisect good <know good point>
