@@ -6,3 +6,10 @@
     CopyTxt: python -m SimpleHTTPServer
   - Descr: Remembering ssh login password for soft09 server
     CopyTxt: ssh-copy-id jenkins@soft-test09
+- Security:
+  - Descr: Add new user
+    CopyTxt: sudo adduser <user>
+  - Descr: New password for user
+    CopyTxt: sudo passwd <user>
+  - Descr: Login as another user
+    CopyTxt: sudo bash; su - <user>

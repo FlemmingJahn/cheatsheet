@@ -158,25 +158,20 @@ class Cheatsheet
     currentLen = 0
     endPoint = @sections.length-1
     start = 0
-
+    endPoint = 0
     while 1 do
       col, row = IO.console.winsize
-
+#      puts("row:#{row}")
       # Figure out how many section that can be printed with the screen width
       for i in start..@sections.length-1
-         key = @sections[i].keys[0]
-         len = @maxLen[key] + HDR_SPACING
-         endPoint = i
-
-         if (row - len) < 0
+        key = @sections[i].keys[0]
+        len = @maxLen[key] + HDR_SPACING
+#        puts("row:#{row}, len:#{len}")
+        if (row - len) < 0
            break
-         end
-         row -= len
-       end
-
-      # If we exceed the screen width then we wait with the last secion
-      if endPoint && endPoint != start && endPoint != @sections.length-1
-        endPoint -= 1
+        end
+        endPoint = i
+        row -= len
       end
 
       #print the section that can fit within the screen width
