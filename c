@@ -128,6 +128,7 @@ class Cheatsheet
 
     # Print the headers and figure out lines cnt for the section with most lines
     for i in start..endpoint
+      return if @sections[i].nil?
       key = @sections[i].keys[0]
       printHeader(key, @maxLen[key])
       maxLines = @linesCnt[key] -1 if @linesCnt[key] > maxLines
