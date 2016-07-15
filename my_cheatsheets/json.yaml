@@ -6,6 +6,8 @@
     CopyTxt: vson -d 192.168.1.200 grep firmware
   - Descr: Get license description
     CopyTxt: time vson -cd 192.168.1.200 call firmware.status.licenseDescription.get
+  - Descr: Finding elements avialable
+    CopyTxt: ./vson -d 192.168.1.233 -u  -p cisco --ssl -c grep systemUtility
 - VSON - How it works:
   - Descr: The JSON spec is download to your home directory and is named .vtss-json-rpc.spec
     CopyTxt: 
