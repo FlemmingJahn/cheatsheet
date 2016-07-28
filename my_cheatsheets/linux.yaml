@@ -13,3 +13,5 @@
     CopyTxt: sudo passwd <user>
   - Descr: Login as another user
     CopyTxt: sudo bash; su - <user>
+  - Descr: Shh login with blank username
+    CopyTxt: ssh -l "" 192.168.1.1

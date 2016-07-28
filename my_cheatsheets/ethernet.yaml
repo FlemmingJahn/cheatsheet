@@ -1,0 +1,4 @@
+---
+- Traffic:
+  - Descr: Linux GUI traffic generator
+    CopyTxt: packeth
