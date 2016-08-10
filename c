@@ -205,7 +205,7 @@ class Cheatsheet
   # Function for find a file that matches the file given by the used.
   # If multiple files matches, then print the list of files, and exit
   def findFileName cheatName
-    return "#{cheatName}.yaml" if File.file?("#{PATH}/#{cheatName}.yaml") && !cheatName.nil? # Excat match
+    return "#{cheatName}.yaml" if File.file?("#{PATH}/#{cheatName}.yaml") && !cheatName.nil? # Exact match
 
     pwd = Dir.pwd
     Dir.chdir(PATH)
@@ -219,7 +219,7 @@ class Cheatsheet
     end
 
     if cheatName.nil?
-      files = Dir.glob("*.yaml")
+      files = Dir.entries("#{PATH}").select { |str| str.include?('.yaml') }
     end
 
     if files.length == 0
@@ -234,6 +234,7 @@ class Cheatsheet
     end
 
     if files.length > 1
+      col, row = IO.console.winsize
       totalLen = 0
       puts "Multiple cheatsheet files found. Please select one of the below:"
       files.each do |file|
