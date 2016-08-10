@@ -15,3 +15,6 @@
     CopyTxt: sudo bash; su - <user>
   - Descr: Shh login with blank username
     CopyTxt: ssh -l "" 192.168.1.1
+- System:
+  - Descr: See folder sizes
+    CopyTxt: du -sh *

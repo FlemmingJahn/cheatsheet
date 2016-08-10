@@ -25,7 +25,6 @@ class Cheatsheet
   attr_accessor :cpIndex    # Index for the line to copy to clipboard
 
   def initialize
-    @cpIndex  = 0
     @maxLen   = {}          # Max line length within a section
     @linesCnt = {}
     @sections = []          # Array of section containning the chaeats
@@ -43,6 +42,23 @@ class Cheatsheet
     output += " " * HDR_SPACING
     output += "\e[0m"
     print output
+  end
+
+  # Returning the copy index number for a given "copy text" string
+  def getCopyIndex cpTxt
+    cnt = 0
+    @sections.each { |sec|
+      key=sec.keys[0]
+      sec[key].each { |s|
+    	if !s["CopyTxt"].nil?
+          if cpTxt == s["CopyTxt"]
+            return cnt
+          end
+          cnt += 1
+        end
+      }
+    }
+    return -1
   end
 
   def getCopyTxt cpIndex
@@ -67,8 +83,8 @@ class Cheatsheet
 
     # Calculate and print 2 digit copy index
     if copyText
+      cpIndex = getCopyIndex(copyText)
       output   += sprintf("%-2d ", cpIndex)
-      @cpIndex += 1
     elsif descr
       output   += "-" + " " * 2
     end
