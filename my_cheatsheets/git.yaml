@@ -11,3 +11,9 @@
 - debugging:
   - Descr: Doing binary seach
     CopyTxt: git bisect start; git bisect bad; git bisect good <know good point>
+- log:
+  - Descr: Get log between two tags for a specifc branch
+    CopyTxt: git log --since "`git log -1 --format=%ai <your-tag>` "
+  - Descr: See log between 2 tags
+    CopyTxt: git log ESTAX-REL-SATURN-2.00.01..ESTAX-REL-SATURN-2.00.02 --no-merges
+      --first-parent

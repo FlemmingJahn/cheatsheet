@@ -18,3 +18,5 @@
 - System:
   - Descr: See folder sizes
     CopyTxt: du -sh *
+  - Descr: See folder size sorted by size
+    CopyTxt: sudo du -sh * | sort -h

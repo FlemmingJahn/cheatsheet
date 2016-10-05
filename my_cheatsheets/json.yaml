@@ -10,6 +10,18 @@
     CopyTxt: ./vson -d 192.168.1.233 -u  -p cisco --ssl -c grep systemUtility
   - Descr: 
     CopyTxt: vson -cd 192.168.1.201 -u "" -p cisco  call port.statistics.rmon.get
+  - Descr: Rockwell (ssl)
+    CopyTxt: ./vson --ssl -cd 192.168.1.201 -u "" -p cisco  call ip.config.interface.ipv4.get
+  - Descr: Setting
+    CopyTxt: ./vson --ssl -cd 192.168.1.201 -u "" -p cisco  call cip.config.global.set
+      '{"label":"label"}'
+  - Descr: Update spec
+    CopyTxt: ./vson --ssl -cd 192.168.1.201 -u "" -p cisco  update-spec
+  - Descr: ! 'Error: A JSON text must at least contain two octets! (JSON::ParserError)
+      - Rolution - password is wrong'
+    CopyTxt: 
+  - Descr: Rockwell (ssl)
+    CopyTxt: ./vson --ssl -cd 192.168.1.201 -u  -p switch  call ip.config.interface.ipv4.get
 - VSON - How it works:
   - Descr: The JSON spec is download to your home directory and is named .vtss-json-rpc.spec
     CopyTxt: 
