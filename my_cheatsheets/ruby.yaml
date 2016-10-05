@@ -1,0 +1,4 @@
+---
+- pry:
+  - Descr: Makeing next, continue work
+    CopyTxt: sudo gem install pry-nav
