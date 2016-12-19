@@ -11,3 +11,13 @@
     CopyTxt: binding.pry
   - Descr: Next, Step, Continue - shortcuts - Add in .pryrc (mine are n,c,s)
     CopyTxt: 
+- Env:
+  - Descr: Log in to one of the smoketest - password jenkins
+    CopyTxt: ssh jenkins@soft-test09
+- default:
+  - Descr: 
+    CopyTxt: make smoke M=smoke_demo
+  - Descr: 
+    CopyTxt: make smoke_debug M=demo2
+  - Descr: 
+    CopyTxt: make smoke_log

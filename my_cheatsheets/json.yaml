@@ -22,6 +22,17 @@
     CopyTxt: 
   - Descr: Rockwell (ssl)
     CopyTxt: ./vson --ssl -cd 192.168.1.201 -u  -p switch  call ip.config.interface.ipv4.get
+  - Descr: Set interface example
+    CopyTxt: ./vson --ssl -cd 192.168.1.202 -u "" -p cisco call mstp.config.cist.interface.set
+      "Fa 1/1" '{"Enable":false, "AdminEdgePort":true}'
+  - Descr: Set list
+    CopyTxt: ./vson --ssl -cd 192.168.1.202 -u "-p cisco  call mirror.config.session.set
+      1 '{"Mode":true, "CpuRx":false, "CpuTx":false, "SourcePortListRx":["Fa 1/2"],
+      "SourcePortListTx":["Fa 1/3"]}'
 - VSON - How it works:
   - Descr: The JSON spec is download to your home directory and is named .vtss-json-rpc.spec
     CopyTxt: 
+- curl:
+  - Descr: Curl using json_pp
+    CopyTxt: curl http://admin:@192.168.1.202/json_rpc -d '{"method":"port.status.get",  params:[
+      "Gi 1/6" ],"id":"4"}' | json_pp
