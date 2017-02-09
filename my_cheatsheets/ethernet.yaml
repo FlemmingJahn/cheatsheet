@@ -2,3 +2,5 @@
 - Traffic:
   - Descr: Linux GUI traffic generator
     CopyTxt: packeth
+  - Descr: command line packet generator
+    CopyTxt: sudo tcpreplay --intf1=green --loop=1  cdp_corrupt.pcap

@@ -20,6 +20,8 @@
     CopyTxt: du -sh *
   - Descr: See folder size sorted by size
     CopyTxt: sudo du -sh * | sort -h
+  - Descr: Kill all by name
+    CopyTxt: killall -9 <name>
 - RS232 PORT:
   - Descr: Terminal
     CopyTxt: screen /dev/ttyUSB0 115200

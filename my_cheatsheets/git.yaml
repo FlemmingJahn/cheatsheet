@@ -17,3 +17,6 @@
   - Descr: See log between 2 tags
     CopyTxt: git log ESTAX-REL-SATURN-2.00.01..ESTAX-REL-SATURN-2.00.02 --no-merges
       --first-parent
+- Branch:
+  - Descr: Check which branch contains commit
+    CopyTxt: git branch --contains <commit>
