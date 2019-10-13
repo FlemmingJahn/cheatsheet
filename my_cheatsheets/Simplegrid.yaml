@@ -1,4 +1,0 @@
----
-- Starting:
-  - Descr: Restart the server
-    CopyTxt: sudo /etc/init.d/simplegrid.sh restart
