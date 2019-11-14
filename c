@@ -341,7 +341,7 @@ cheatSheetName = checkOptions options
 PATH = File.dirname($0) + "/my_cheatsheets" # Get the path to the cheatsheets
 
 
-# If the first argument is a number then we copy the corrsponding copyText from the last sheet that was read
+# If the first argument is a number then we copy the corresponding copyText from the last sheet that was read
 nameIsInt = Integer(cheatSheetName) rescue nil
 if nameIsInt
   if !File.exist?("#{PATH}/cheatsheet.last")
