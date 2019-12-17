@@ -9,6 +9,7 @@ class Cheatsheet:
     sections = []  # Array of section containning the chaeats
     cheatSheetsPath = os.path.dirname(os.path.realpath(__file__)) + "/my_cheatsheets"  # Get the path to the cheatsheets
     currentCheatSheetFullPath = None
+    copyArray = []
 
     def readYamlFile(self, fileName):
         if os.path.exists(fileName) and os.path.getsize(fileName) > 0:
@@ -21,6 +22,7 @@ class Cheatsheet:
     # If multiple files matches, then print the list of files, and exit
     def findFileName(self):
         self.currentCheatSheatName = self.cheatSheetNameGet()
+        self.storeLastCheatName()
 
         if self.currentCheatSheatName != None:
             if os.path.exists(self.currentCheatSheetNameFullPathGet()):
@@ -76,9 +78,8 @@ class Cheatsheet:
 
     # If the first argument is a number then we copy the corresponding copyText from the last sheet that was read
     def cheatSheetNameGet(self):
-        if unknownargs:
-            # user provided cheatsheet
-            self.storeLastCheatName()
+        if unknownargs and unknownargs[0].isdecimal() == False:
+            # user provided cheatsheet and not a copy request (a number)
             return unknownargs[0]
 
         # If the user didn't provide a cheat sheet name, will we list all possible cheatsheet
@@ -90,7 +91,8 @@ class Cheatsheet:
             sys.exit()
 
         with open(self.lastCheatSheet) as infile:
-            return yaml.load(infile)
+            lastCheatSheet = yaml.safe_load(infile)
+            return lastCheatSheet
 
 
     def storeLastCheatName(self):
@@ -144,21 +146,49 @@ class Cheatsheet:
         text = "=" * dashLength + f" {section} " + "=" * dashLength
         print(text)
 
+    def copyTxtToClipboard(self):
+        userInput = unknownargs[0]
+        if userInput.isdecimal():  # User asked for a copy (Numbered)
+            userInputIndex = int(userInput) - 1
+
+            allCheats = self.readCheatSheet()
+
+            if userInputIndex >= len(allCheats):
+                print (f"Index:{userInput} out of range")
+            else:
+               copyTxt = list(allCheats[userInputIndex].values())[0][0]['CopyTxt']
+               pyperclip.copy(copyTxt)
+               print (f"{copyTxt} copied to clip-board")
+
+            sys.exit()
+
+
+        for sections in allCheats:
+            for section in sections.keys():
+                for cheat in sections[section]:
+                    descr   = str(cheat['Descr'] or '')
+                    copyTxt = str(cheat['CopyTxt'] or '')
+                    self.copyArray.append(copyTxt)
+
     def printCheatsheet(self):
         allCheats = self.readCheatSheet()
         sectionNumber = 1
         sectionMaxLen, descrMaxLength, copyTxtMaxLength = self.lengthsMax()
 
+        self.copyArray = []
         for sections in allCheats:
             for section in sections.keys():
                 self.printHeader(section, descrMaxLength, copyTxtMaxLength )
                 for cheat in sections[section]:
                     descr   = str(cheat['Descr'] or '')
                     copyTxt = str(cheat['CopyTxt'] or '')
+                    self.copyArray.append(copyTxt)
 
                     print(f"{sectionNumber:<{2}} - {descr:{descrMaxLength}} : {copyTxt}")
                     sectionNumber += 1
             print()
+
+
 
 helpTxt = "If you like me are working with a Linux terminal all day long,\n" \
           "but also have as poor a memory as me,\n"\
@@ -190,6 +220,8 @@ helpTxt = "If you like me are working with a Linux terminal all day long,\n" \
 
 
 
+import pyperclip
+
 
 
 import argparse
@@ -200,10 +232,10 @@ parser.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS, he
 args, unknownargs = parser.parse_known_args()
 
 
-
 c = Cheatsheet()
 
-file = c.findFileName()
+c.findFileName()
+c.copyTxtToClipboard()
 c.printCheatsheet()
 
 
