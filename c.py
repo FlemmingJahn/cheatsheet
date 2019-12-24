@@ -39,8 +39,8 @@ class Cheatsheet:
 
         if not files and self.currentCheatSheatName != None:
             # Create a new cheatSheet
-            print("New cheatSheet named #{cheatName} created")
-            return f"#{currentCheatSheatName}.yaml"
+            print(f"New cheatSheet named {self.currentCheatSheatName} created")
+            return f"{self.currentCheatSheatName}.yaml"
 
         if not files:
             print ("No cheatsheet files found")
@@ -229,6 +229,9 @@ parser = argparse.ArgumentParser(add_help=False, formatter_class=argparse.RawTex
 
 parser.add_argument('-v', '--version', action='version', version='%(prog)s 1.0', help="Show program's version number and exit.")
 parser.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS, help=helpTxt)
+parser.add_argument('-s', '--section',     help="Section to add new cheat to")
+parser.add_argument('-d', '--description', help="Description of the cheat to be added")
+parser.add_argument('-c', '--copyTxt',     help="CopyText of the cheat to be added")
 args, unknownargs = parser.parse_known_args()
 
 
