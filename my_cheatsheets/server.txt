@@ -1,2 +1,0 @@
-H::Default
-Start HTTP serverC::python -m SimpleHTTPServer

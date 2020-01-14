@@ -1,5 +1,0 @@
-TUI window mode: ^A x
-Watch memory write: watch *address
-Watch memory read: rwatch
-Watch access: awatch
-http://twiki.dk.vitesse.com/twiki/cgi-bin/view/Software/UsingMAJICJtag

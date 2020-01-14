@@ -1,4 +1,0 @@
-H::Default
-H::Install
-xclip needed for copy textC::sudo apt-get install xclip
-Getting copy text to work with Putty - see https://obieepedia.wordpress.com/2013/02/03/setting-up-putty-to-display-screens-on-your-desktop-for-installing-or-upgrading-obiee-on-linux/

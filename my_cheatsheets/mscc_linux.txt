@@ -1,4 +1,0 @@
-H::Default
-H::Debuggig
-See kernel messagesC::dmesg
-Check i2c devicesC::ls -la /dev/i2c*

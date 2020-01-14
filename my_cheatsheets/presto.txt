@@ -1,5 +1,0 @@
-H::Default
-H::Installtion
-Download 'up' from www.asix.net
-H::setup
-Serval - Device Family='SPI FLASH EPROM', Device='MX25L12835F

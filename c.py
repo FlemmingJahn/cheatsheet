@@ -1,3 +1,4 @@
+#! c:\Users\Flemming\AppData\Local\Programs\Python\Python37-32\python.exe
 import optparse
 import sys
 import os
@@ -40,6 +41,8 @@ class Cheatsheet:
         if not files and self.currentCheatSheatName != None:
             # Create a new cheatSheet
             print(f"New cheatSheet named {self.currentCheatSheatName} created")
+            # self.sections["default"]
+            self.writeCheatSheet()
             return f"{self.currentCheatSheatName}.yaml"
 
         if not files:
@@ -100,8 +103,32 @@ class Cheatsheet:
             yaml.dump(self.currentCheatSheatName, file)
 
     def readCheatSheet(self):
-        with open(self.currentCheatSheetNameFullPathGet()) as infile:
-            return yaml.safe_load(infile)
+        try:
+            with open(self.currentCheatSheetNameFullPathGet()) as infile:
+                return yaml.safe_load(infile)
+        except:
+            print (f"Cheats for {self.currentCheatSheatName} not found")
+            sys.exit()
+
+    def addCheat(self, newSection, copyTxt, description):
+        allCheats = self.readCheatSheet()
+
+        cheatIndex = 0
+
+        # Determine if section already exists
+        for section in allCheats:
+            if section == newSection:
+                cheatIndex = len(allCheats[section])
+
+
+        allCheats[section][cheatIndex]['Descr'] = description
+        allCheats[section][cheatIndex]['CopyTxt'] = copyTxt
+        self.writeCheatSheet()
+
+    def writeCheatSheet(self):
+        allCheats = self.readCheatSheet()
+        with open(f"{self.currentCheatSheetNameFullPathGet()}", 'w') as file:
+            yaml.dump(allCheats, file)
 
     def sectionLengthMax(self):
         maxLen = 0
@@ -116,17 +143,17 @@ class Cheatsheet:
         sectionMaxLen = 0
         descrMaxLength = 0
         copyTxtMaxLength = 0
-        for sections in self.readCheatSheet():
-            for section in sections.keys():
-                for cheat in sections[section]:
-                    if section.__len__() > sectionMaxLen:
-                        sectionMaxLen = section.__len__()
+        allCheats = self.readCheatSheet()
+        for section in allCheats:
+            for cheat in allCheats[section]:
+                if section.__len__() > sectionMaxLen:
+                    sectionMaxLen = section.__len__()
 
-                    if cheat['Descr'] != None and cheat['Descr'].__len__() > descrMaxLength:
-                        descrMaxLength = cheat['Descr'].__len__()
+                if cheat['Descr'] != None and cheat['Descr'].__len__() > descrMaxLength:
+                    descrMaxLength = cheat['Descr'].__len__()
 
-                    if cheat['CopyTxt'] != None and cheat['CopyTxt'].__len__() > copyTxtMaxLength:
-                        copyTxtMaxLength = cheat['CopyTxt'].__len__()
+                if cheat['CopyTxt'] != None and cheat['CopyTxt'].__len__() > copyTxtMaxLength:
+                    copyTxtMaxLength = cheat['CopyTxt'].__len__()
 
         return sectionMaxLen, descrMaxLength, copyTxtMaxLength
 
@@ -156,19 +183,10 @@ class Cheatsheet:
             if userInputIndex >= len(allCheats):
                 print (f"Index:{userInput} out of range")
             else:
-               copyTxt = list(allCheats[userInputIndex].values())[0][0]['CopyTxt']
+               copyTxt = list(allCheats[userInputIndex].values())[0]['CopyTxt']
                pyperclip.copy(copyTxt)
                print (f"{copyTxt} copied to clip-board")
 
-            sys.exit()
-
-
-        for sections in allCheats:
-            for section in sections.keys():
-                for cheat in sections[section]:
-                    descr   = str(cheat['Descr'] or '')
-                    copyTxt = str(cheat['CopyTxt'] or '')
-                    self.copyArray.append(copyTxt)
 
     def printCheatsheet(self):
         allCheats = self.readCheatSheet()
@@ -176,17 +194,16 @@ class Cheatsheet:
         sectionMaxLen, descrMaxLength, copyTxtMaxLength = self.lengthsMax()
 
         self.copyArray = []
-        for sections in allCheats:
-            for section in sections.keys():
-                self.printHeader(section, descrMaxLength, copyTxtMaxLength )
-                for cheat in sections[section]:
-                    descr   = str(cheat['Descr'] or '')
-                    copyTxt = str(cheat['CopyTxt'] or '')
-                    self.copyArray.append(copyTxt)
+        for section in allCheats:
+            self.printHeader(section, descrMaxLength, copyTxtMaxLength )
+            for cheat in allCheats[section]:
+                descr   = str(cheat['Descr'] or '')
+                copyTxt = str(cheat['CopyTxt'] or '')
+                self.copyArray.append(copyTxt)
 
-                    print(f"{sectionNumber:<{2}} - {descr:{descrMaxLength}} : {copyTxt}")
-                    sectionNumber += 1
-            print()
+                print(f"{sectionNumber:<{2}} - {descr:{descrMaxLength}} : {copyTxt}")
+                sectionNumber += 1
+        print()
 
 
 
@@ -227,8 +244,8 @@ import pyperclip
 import argparse
 parser = argparse.ArgumentParser(add_help=False, formatter_class=argparse.RawTextHelpFormatter)
 
-parser.add_argument('-v', '--version', action='version', version='%(prog)s 1.0', help="Show program's version number and exit.")
-parser.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS, help=helpTxt)
+parser.add_argument('-v', '--version',     action='version', version='%(prog)s 1.0', help="Show program's version number and exit.")
+parser.add_argument('-h', '--help',        action='help', default=argparse.SUPPRESS, help=helpTxt)
 parser.add_argument('-s', '--section',     help="Section to add new cheat to")
 parser.add_argument('-d', '--description', help="Description of the cheat to be added")
 parser.add_argument('-c', '--copyTxt',     help="CopyText of the cheat to be added")
@@ -238,6 +255,12 @@ args, unknownargs = parser.parse_known_args()
 c = Cheatsheet()
 
 c.findFileName()
+if args.copyTxt != None or args.description != None or args.section != None:
+    print ("Adding new cheat")
+    c.addCheat(args.section, args.copyTxt, args.description)
+
+    sys.exit()
+
 c.copyTxtToClipboard()
 c.printCheatsheet()
 

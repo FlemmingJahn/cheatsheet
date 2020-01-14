@@ -1,38 +1,38 @@
 ---
-- Servers:
-  - Descr: Start tftp service
-    CopyTxt: sudo service tftpd-hpa restart
-  - Descr: Start HTTP server
-    CopyTxt: python -m SimpleHTTPServer
-  - Descr: Remembering ssh login password for soft09 server
-    CopyTxt: ssh-copy-id jenkins@soft-test09
-- Security:
-  - Descr: Add new user
-    CopyTxt: sudo adduser <user>
-  - Descr: New password for user
-    CopyTxt: sudo passwd <user>
-  - Descr: Login as another user
-    CopyTxt: sudo bash; su - <user>
-  - Descr: Shh login with blank username
-    CopyTxt: ssh -l "" 192.168.1.1
-- System:
-  - Descr: See folder sizes
-    CopyTxt: du -sh *
-  - Descr: See folder size sorted by size
-    CopyTxt: sudo du -sh * | sort -h
-  - Descr: Kill all by name
-    CopyTxt: killall -9 <name>
-- RS232 PORT:
-  - Descr: Terminal
-    CopyTxt: screen /dev/ttyUSB0 115200
-  - Descr: Com Port to TCP
-    CopyTxt: sudo ser2net
-  - Descr: Com Port to TCP Configuraton
-    CopyTxt: sudo emacs /etc/ser2net.conf
-  - Descr: Com Port to TCP Restart
-    CopyTxt: sudo  /etc/init.d/ser2net restart
-  - Descr: Check ports
-    CopyTxt: dmesg | grep tty
-- Puppet:
-  - Descr: Force update on client
-    CopyTxt: sudo puppet agent --test
+Servers:
+- Descr: Start tftp service
+  CopyTxt: sudo service tftpd-hpa restart
+- Descr: Start HTTP server
+  CopyTxt: python -m SimpleHTTPServer
+- Descr: Remembering ssh login password for soft09 server
+  CopyTxt: ssh-copy-id jenkins@soft-test09
+Security:
+- Descr: Add new user
+  CopyTxt: sudo adduser <user>
+- Descr: New password for user
+  CopyTxt: sudo passwd <user>
+- Descr: Login as another user
+  CopyTxt: sudo bash; su - <user>
+- Descr: Shh login with blank username
+  CopyTxt: ssh -l "" 192.168.1.1
+System:
+- Descr: See folder sizes
+  CopyTxt: du -sh *
+- Descr: See folder size sorted by size
+  CopyTxt: sudo du -sh * | sort -h
+- Descr: Kill all by name
+  CopyTxt: killall -9 <name>
+RS232 PORT:
+- Descr: Terminal
+  CopyTxt: screen /dev/ttyUSB0 115200
+- Descr: Com Port to TCP
+  CopyTxt: sudo ser2net
+- Descr: Com Port to TCP Configuraton
+  CopyTxt: sudo emacs /etc/ser2net.conf
+- Descr: Com Port to TCP Restart
+  CopyTxt: sudo  /etc/init.d/ser2net restart
+- Descr: Check ports
+  CopyTxt: dmesg | grep tty
+Puppet:
+- Descr: Force update on client
+  CopyTxt: sudo puppet agent --test

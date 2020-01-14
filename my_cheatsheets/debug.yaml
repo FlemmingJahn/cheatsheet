@@ -1,7 +1,0 @@
----
-- gdb:
-  - Descr: Launch
-    CopyTxt: /opt/mscc/mscc-brsdk-mips-v02.11/stage2/debug/x86_64-linux/usr/bin/mipsel-linux-gdb
-      obj/*.elf
-  - Descr: Show code for address
-    CopyTxt: info line *0x00fd6580

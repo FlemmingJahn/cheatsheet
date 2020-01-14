@@ -1,22 +1,21 @@
----
-- projects:
-  - Descr: How to checkout a new project
-    CopyTxt: git clone [url]
-- default:
-  - Descr: Clenup everything (done at top dir)
-    CopyTxt: git clean -df; git reset --hard
-- tags:
-  - Descr: See date for tags
-    CopyTxt: git log --tags --simplify-by-decoration --pretty="format:%ai %d"
-- debugging:
-  - Descr: Doing binary seach
-    CopyTxt: git bisect start; git bisect bad; git bisect good <know good point>
-- log:
-  - Descr: Get log between two tags for a specifc branch
-    CopyTxt: git log --since "`git log -1 --format=%ai <your-tag>` "
-  - Descr: See log between 2 tags
-    CopyTxt: git log ESTAX-REL-SATURN-2.00.01..ESTAX-REL-SATURN-2.00.02 --no-merges
-      --first-parent
-- Branch:
-  - Descr: Check which branch contains commit
-    CopyTxt: git branch --contains <commit>
+projects:
+- Descr: How to checkout a new project
+  CopyTxt: git clone [url]
+default:
+- Descr: Clenup everything (done at top dir)
+  CopyTxt: git clean -df; git reset --hard
+tags:
+- Descr: See date for tags
+  CopyTxt: git log --tags --simplify-by-decoration --pretty="format:%ai %d"
+debugging:
+- Descr: Doing binary seach
+  CopyTxt: git bisect start; git bisect bad; git bisect good <know good point>
+log:
+- Descr: Get log between two tags for a specifc branch
+  CopyTxt: git log --since "`git log -1 --format=%ai <your-tag>` "
+- Descr: See log between 2 tags
+  CopyTxt: git log ESTAX-REL-SATURN-2.00.01..ESTAX-REL-SATURN-2.00.02 --no-merges
+    --first-parent
+Branch:
+- Descr: Check which branch contains commit
+  CopyTxt: git branch --contains <commit>
